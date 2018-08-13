@@ -6452,4 +6452,303 @@ public class OrderServices {
         }
         return ServiceUtil.returnSuccess();
     }
+    
+    public static Map<String, Object> associateOrderWithAllocationPlans(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin  = (GenericValue)context.get("userLogin");
+        String orderId = (String) context.get("orderId");
+        String planMethodEnumId = (String) context.get("planMethodEnumId");
+        Map<String, String> productPlanMap = new HashMap<String, String>();
+        Map<String, Object> serviceResult = new HashMap<String, Object>();
+        try {
+            String userLoginId = null;
+            if (userLogin != null) {
+                userLoginId = userLogin.getString("userLoginId");
+            }
+            if (planMethodEnumId == null) {
+                planMethodEnumId = "MANUAL";
+            }
+            //Get the list of associated products
+            OrderReadHelper orderReadHelper = new OrderReadHelper(delegator, orderId);
+            List<GenericValue> orderItems =  orderReadHelper.getOrderItems();
+            Map<String, Object> serviceCtx = new HashMap<String, Object>();
+            for (GenericValue orderItem : orderItems) {
+                String orderItemSeqId = orderItem.getString("orderItemSeqId");
+                String productId = orderItem.getString("productId");
+                //Look for any existing open allocation plan, if not available create a new one
+                String planId = null;
+                GenericValue allocationPlanHeader = EntityQuery.use(delegator).from("AllocationPlanHeader").where("productId", productId, "planTypeId", "SALES_ORD_ALLOCATION", "statusId", "ALLOC_PLAN_CREATED").queryFirst();
+                if (allocationPlanHeader == null) {
+                    serviceCtx.put("productId", productId);
+                    serviceCtx.put("planTypeId", "SALES_ORD_ALLOCATION");
+                    serviceCtx.put("planName", "Allocation Plan For Product #"+productId);
+                    serviceCtx.put("statusId", "ALLOC_PLAN_CREATED");
+                    serviceCtx.put("createdByUserLogin", userLoginId);
+                    serviceCtx.put("userLogin", userLogin);
+                    serviceResult = dispatcher.runSync("createAllocationPlanHeader", serviceCtx);
+                    if (ServiceUtil.isError(serviceResult)) {
+                        Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                    }
+                    planId = (String) serviceResult.get("planId");
+                } else {
+                    planId = allocationPlanHeader.getString("planId");
+                    serviceCtx.put("planId", planId);
+                    serviceCtx.put("productId", productId);
+                    serviceCtx.put("lastModifiedByUserLogin", userLoginId);
+                    serviceCtx.put("userLogin", userLogin);
+                    serviceResult = dispatcher.runSync("updateAllocationPlanHeader", serviceCtx);
+                    if (ServiceUtil.isError(serviceResult)) {
+                        Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                    }
+                }
+                serviceCtx.clear();
+
+                List<EntityCondition> itemConditions = new ArrayList();
+                itemConditions.add(EntityCondition.makeCondition("planId", planId));
+                itemConditions.add(EntityCondition.makeCondition("orderId", orderId));
+                itemConditions.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+                itemConditions.add(EntityCondition.makeCondition("planItemStatusId", EntityOperator.EQUALS, "ALLOC_PLAN_ITEM_CRTD"));
+                GenericValue allocationPlanItem = EntityQuery.use(delegator).from("AllocationPlanItem").where(itemConditions).queryFirst();
+                String planItemSeqId = null;
+                if (allocationPlanItem == null) {
+                    //Add the orderItem to the allocation plan
+                    serviceCtx.put("planId", planId);
+                    serviceCtx.put("planItemStatusId", "ALLOC_PLAN_ITEM_CRTD");
+                    serviceCtx.put("planMethodEnumId", planMethodEnumId);
+                    if ("AUTO".equals(planMethodEnumId)) {
+                        serviceCtx.put("allocatedQuantity", orderItem.getBigDecimal("quantity"));
+                    }
+                    serviceCtx.put("orderId", orderId);
+                    serviceCtx.put("orderItemSeqId", orderItemSeqId);
+                    serviceCtx.put("productId", productId);
+                    serviceCtx.put("createdByUserLogin", userLoginId);
+                    serviceCtx.put("userLogin", userLogin);
+                    serviceResult = dispatcher.runSync("createAllocationPlanItem", serviceCtx);
+                    if (ServiceUtil.isError(serviceResult)) {
+                        Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                    }
+                    planItemSeqId = (String) serviceResult.get("planItemSeqId");
+                } else {
+                    planItemSeqId = allocationPlanItem.getString("planItemSeqId");
+                    serviceCtx.put("planId", planId);
+                    serviceCtx.put("planItemSeqId", planItemSeqId);
+                    serviceCtx.put("planMethodEnumId", planMethodEnumId);
+                    serviceCtx.put("allocatedQuantity", orderItem.getBigDecimal("quantity"));
+                    serviceCtx.put("lastModifiedByUserLogin", userLoginId);
+                    serviceCtx.put("userLogin", userLogin);
+                    serviceResult = dispatcher.runSync("updateAllocationPlanItem", serviceCtx);
+                    if (ServiceUtil.isError(serviceResult)) {
+                        Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                    }
+                }
+                serviceCtx.clear();
+
+                //Enter the values in productPlanMap
+                productPlanMap.put(productId, planId);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        serviceResult.clear();
+        serviceResult.put("productPlanMap", productPlanMap);
+        return serviceResult;
+    }
+
+    public static Map<String, Object> completeAllocationPlanItems(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin  = (GenericValue)context.get("userLogin");
+        String planId = (String) context.get("planId");
+        Map<String, Object> serviceCtx = new HashMap<String, Object>();
+        Map<String, Object> serviceResult = new HashMap<String, Object>();
+        try {
+            String userLoginId = null;
+            if (userLogin != null) {
+                userLoginId = userLogin.getString("userLoginId");
+            }
+            //Get the list of plan items
+            List<EntityCondition> itemConditions = new ArrayList();
+            itemConditions.add(EntityCondition.makeCondition("planId", planId));
+            itemConditions.add(EntityCondition.makeCondition("planItemStatusId", EntityOperator.NOT_EQUAL, "ALLOC_PLAN_ITEM_CMPL"));
+            List<GenericValue> allocationPlanItems = EntityQuery.use(delegator).from("AllocationPlanItem").where(itemConditions).queryList();
+
+            for (GenericValue allocationPlanItem : allocationPlanItems) {
+                serviceCtx.put("planId", planId);
+                serviceCtx.put("planItemSeqId", allocationPlanItem.getString("planItemSeqId"));
+                serviceCtx.put("planItemStatusId", "ALLOC_PLAN_ITEM_CMPL");
+                serviceCtx.put("lastModifiedByUserLogin", userLoginId);
+                serviceCtx.put("userLogin", userLogin);
+                serviceResult = dispatcher.runSync("updateAllocationPlanItem", serviceCtx);
+                if (ServiceUtil.isError(serviceResult)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                }
+                serviceCtx.clear();
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static Map<String, Object> cancelAllocationPlanItems(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin  = (GenericValue)context.get("userLogin");
+        String planId = (String) context.get("planId");
+        Map<String, Object> serviceCtx = new HashMap<String, Object>();
+        Map<String, Object> serviceResult = new HashMap<String, Object>();
+        try {
+            String userLoginId = null;
+            if (userLogin != null) {
+                userLoginId = userLogin.getString("userLoginId");
+            }
+            //Get the list of plan items
+            List<EntityCondition> itemConditions = new ArrayList();
+            itemConditions.add(EntityCondition.makeCondition("planId", planId));
+            itemConditions.add(EntityCondition.makeCondition("planItemStatusId", EntityOperator.NOT_EQUAL, "ALLOC_PLAN_ITEM_CNCL"));
+            List<GenericValue> allocationPlanItems = EntityQuery.use(delegator).from("AllocationPlanItem").where(itemConditions).queryList();
+
+            for (GenericValue allocationPlanItem : allocationPlanItems) {
+                serviceCtx.put("planId", planId);
+                serviceCtx.put("planItemSeqId", allocationPlanItem.getString("planItemSeqId"));
+                serviceCtx.put("planItemStatusId", "ALLOC_PLAN_ITEM_CNCL");
+                serviceCtx.put("lastModifiedByUserLogin", userLoginId);
+                serviceCtx.put("userLogin", userLogin);
+                serviceResult = dispatcher.runSync("updateAllocationPlanItem", serviceCtx);
+                if (ServiceUtil.isError(serviceResult)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                }
+                serviceCtx.clear();
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static Map<String, Object> changeAllocationPlanStatus(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin  = (GenericValue)context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
+        String planId = (String) context.get("planId");
+        String statusId = (String) context.get("statusId");
+        String oldStatusId = null;
+        Map<String, Object> serviceResult = new HashMap<String, Object>();
+        try {
+            GenericValue allocationPlanHeader = EntityQuery.use(delegator).from("AllocationPlanHeader").where("planId", planId).queryFirst();
+            if (allocationPlanHeader == null) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                        "OrderErrorAllocationPlanIsNotAvailable", locale) + ": [" + planId + "]");
+            }
+            oldStatusId = allocationPlanHeader.getString("statusId");
+            try {
+                GenericValue statusChange = EntityQuery.use(delegator).from("StatusValidChange").where("statusId", oldStatusId, "statusIdTo", statusId).queryOne();
+                if (statusChange == null) {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                            "OrderErrorCouldNotChangeAllocationPlanStatusStatusIsNotAValidChange", locale) + ": [" + oldStatusId + "] -> [" + statusId + "]");
+                }
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                        "OrderErrorCouldNotChangeAllocationPlanStatus",locale) + e.getMessage() + ").");
+            }
+            String userLoginId = null;
+            if (userLogin != null) {
+                userLoginId = userLogin.getString("userLoginId");
+            }
+            Map<String, Object> serviceCtx = new HashMap<String, Object>();
+            serviceCtx.put("planId", planId);
+            serviceCtx.put("productId", allocationPlanHeader.getString("productId"));
+            serviceCtx.put("statusId", statusId);
+            serviceCtx.put("lastModifiedByUserLogin", userLoginId);
+            serviceCtx.put("userLogin", userLogin);
+            serviceResult = dispatcher.runSync("updateAllocationPlanHeader", serviceCtx);
+            if (ServiceUtil.isError(serviceResult)) {
+                Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        serviceResult.clear();
+        serviceResult.put("oldStatusId", oldStatusId);
+        return serviceResult;
+    }
+
+    public static Map<String, Object> changeAllocationPlanItemStatus(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin  = (GenericValue)context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
+        String planId = (String) context.get("planId");
+        String planItemSeqId = (String) context.get("planItemSeqId");
+        String statusId = (String) context.get("statusId");
+        String oldStatusId = null;
+        Map<String, Object> serviceResult = new HashMap<String, Object>();
+        try {
+            GenericValue allocationPlanItem = EntityQuery.use(delegator).from("AllocationPlanItem").where("planId", planId, "planItemSeqId", planItemSeqId).queryOne();
+            if (allocationPlanItem == null) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                        "OrderErrorAllocationPlanIsNotAvailable", locale) + ": [" + planId + ":"+ planItemSeqId + "]");
+            }
+            oldStatusId = allocationPlanItem.getString("planItemStatusId");
+            try {
+                GenericValue statusChange = EntityQuery.use(delegator).from("StatusValidChange").where("statusId", oldStatusId, "statusIdTo", statusId).queryOne();
+                if (statusChange == null) {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                            "OrderErrorCouldNotChangeAllocationPlanItemStatusStatusIsNotAValidChange", locale) + ": [" + oldStatusId + "] -> [" + statusId + "]");
+                }
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                        "OrderErrorCouldNotChangeAllocationPlanItemStatus",locale) + e.getMessage() + ").");
+            }
+            String userLoginId = null;
+            if (userLogin != null) {
+                userLoginId = userLogin.getString("userLoginId");
+            }
+            Map<String, Object> serviceCtx = new HashMap<String, Object>();
+            serviceCtx.put("planId", planId);
+            serviceCtx.put("planItemSeqId", planItemSeqId);
+            serviceCtx.put("planItemStatusId", statusId);
+            serviceCtx.put("lastModifiedByUserLogin", userLoginId);
+            serviceCtx.put("userLogin", userLogin);
+            serviceResult = dispatcher.runSync("updateAllocationPlanItem", serviceCtx);
+            if (ServiceUtil.isError(serviceResult)) {
+                Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        serviceResult.clear();
+        serviceResult.put("oldStatusId", oldStatusId);
+        return serviceResult;
+    }
 }

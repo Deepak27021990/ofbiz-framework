@@ -42,6 +42,11 @@ under the License.
         <action service="setOrderReservationPriority" mode="sync"/>
     </eca>
 
+    <eca service="storeOrder" event="return">
+        <condition field-name="orderTypeId" operator="equals" value="SALES_ORDER"/>
+        <action service="associateOrderWithAllocationPlans" mode="sync"/>
+    </eca>
+
     <eca service="updateOrderItems" event="commit">
         <condition field-name="orderTypeId" operator="equals" value="PURCHASE_ORDER"/>
         <action service="setUnitPriceAsLastPrice" mode="sync"/>

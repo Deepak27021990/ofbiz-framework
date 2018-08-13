@@ -2942,6 +2942,84 @@ under the License.
             <key-map field-name="workEffortId"/>
         </relation>
     </entity>
-
+    
+    <entity entity-name="AllocationPlanType"
+            package-name="org.apache.ofbiz.order.allocationplan"
+            title="Allocation Plan Type Entity">
+        <field name="planTypeId" type="id"/>
+        <field name="description" type="description"/>
+        <field name="hasTable" type="indicator"/>
+        <prim-key field="planTypeId"/>
+    </entity>
+    <entity entity-name="AllocationPlanHeader"
+            package-name="org.apache.ofbiz.order.allocationplan"
+            title="Allocation Plan Header Entity">
+        <field name="planId" type="id"/>
+        <field name="productId" type="id"/>
+        <field name="planTypeId" type="id"/>
+        <field name="planName" type="name"/>
+        <field name="statusId" type="id"/>
+        <field name="createdByUserLogin" type="id-vlong"/>
+        <field name="lastModifiedByUserLogin" type="id-vlong"/>
+        <prim-key field="planId"/>
+        <prim-key field="productId"/>
+        <relation type="one" fk-name="ALLOC_PLN_HDR_PRODUCT" title="Product Id" rel-entity-name="Product">
+            <key-map field-name="productId"/>
+        </relation>
+        <relation type="one" fk-name="ALLOC_PLAN_HDR_TYPE" title="Plan Type Id" rel-entity-name="AllocationPlanType">
+            <key-map field-name="planTypeId"/>
+        </relation>
+        <relation type="one" fk-name="ALLOC_PLN_HDR_STTS" title="Status Id" rel-entity-name="StatusItem">
+            <key-map field-name="statusId" rel-field-name="statusId"/>
+        </relation>
+        <relation type="one" fk-name="ALLOC_PLN_HDR_CBUL" title="Created By" rel-entity-name="UserLogin">
+            <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+        </relation>
+        <relation type="one" fk-name="ALLOC_PLN_HDR_LMUL" title="Last Modified By" rel-entity-name="UserLogin">
+            <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+        </relation>
+    </entity>
+    <entity entity-name="AllocationPlanItem"
+            package-name="org.apache.ofbiz.order.allocationplan"
+            title="Allocation Plan Item Entity">
+        <field name="planId" type="id"/>
+        <field name="planItemSeqId" type="id"/>
+        <field name="planItemStatusId" type="id"/>
+        <field name="planMethodEnumId" type="id"/>
+        <field name="orderId" type="id"/>
+        <field name="orderItemSeqId" type="id"/>
+        <field name="productId" type="id"/>
+        <field name="allocatedQuantity" type="fixed-point"/>
+        <field name="prioritySeqId" type="id"/>
+        <field name="createdByUserLogin" type="id-vlong"/>
+        <field name="lastModifiedByUserLogin" type="id-vlong"/>
+        <prim-key field="planId"/>
+        <prim-key field="planItemSeqId"/>
+        <relation type="one" fk-name="ALLOC_PLAN_ITM_ODR_HDR" title="Order Id" rel-entity-name="OrderHeader">
+            <key-map field-name="orderId"/>
+        </relation>
+        <relation type="one" fk-name="ALLOC_PLAN_ITM_ODR_ITM" title="Order Item" rel-entity-name="OrderItem">
+            <key-map field-name="orderId"/>
+            <key-map field-name="orderItemSeqId"/>
+        </relation>
+        <relation type="one" fk-name="ALLOC_PLN_ITM_PRODUCT" title="Product Id" rel-entity-name="Product">
+            <key-map field-name="productId"/>
+        </relation>
+        <relation type="one" fk-name="ALLOC_PLN_ITM_STTS" title="Plan Item Status Id" rel-entity-name="StatusItem">
+            <key-map field-name="planItemStatusId" rel-field-name="statusId"/>
+        </relation>
+        <relation type="one" fk-name="ALLOC_PLN_ITM_ENUM" title="Plan Method Enum Id" rel-entity-name="Enumeration">
+            <key-map field-name="planMethodEnumId" rel-field-name="enumId"/>
+        </relation>
+        <relation type="one" fk-name="ALLOC_PLN_ITM_CBUL" title="Created By User Login" rel-entity-name="UserLogin">
+            <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+        </relation>
+        <relation type="one" fk-name="ALLOC_PLN_ITM_LMUL" title="Last Modified By User Login" rel-entity-name="UserLogin">
+            <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+        </relation>
+    </entity>
+    <extend-entity entity-name="OrderItem">
+        <field name="reserveAfterDate" type="date-time"></field>
+    </extend-entity>
  </entitymodel>
  

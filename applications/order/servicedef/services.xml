@@ -1234,4 +1234,73 @@ under the License.
         <description>Delete a ProductOrderItem</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+
+    <!-- Allocation Plan services -->
+    <service name="createAllocationPlanHeader" engine="entity-auto" default-entity-name="AllocationPlanHeader" invoke="create" auth="true">
+        <description>Create Allocation Plan Header</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="planId" mode="OUT"/>
+        <override name="planTypeId" optional="false"/>
+    </service>
+    <service name="updateAllocationPlanHeader" engine="entity-auto" default-entity-name="AllocationPlanHeader" invoke="update" auth="true">
+        <description>Update Allocation Plan Header</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteAllocationPlanHeader" engine="entity-auto" default-entity-name="AllocationPlanHeader" invoke="delete" auth="true">
+        <description>Delete Allocation Plan Header</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+    <service name="createAllocationPlanItem" engine="entity-auto" default-entity-name="AllocationPlanItem" invoke="create" auth="true">
+        <description>Create Allocation Plan Item</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="planItemSeqId" mode="OUT"/>
+        <override name="planMethodEnumId" optional="false"/>
+        <override name="productId" optional="false"/>
+        <override name="orderId" optional="false"/>
+        <override name="orderItemSeqId" optional="false"/>
+    </service>
+    <service name="updateAllocationPlanItem" engine="entity-auto" default-entity-name="AllocationPlanItem" invoke="update" auth="true">
+        <description>Update Allocation Plan Item</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteAllocationPlanItem" engine="entity-auto" default-entity-name="AllocationPlanItem" invoke="delete" auth="true">
+        <description>Delete Allocation Plan Item</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+    <service name="associateOrderWithAllocationPlans" engine="java" auth="true"
+            location="org.apache.ofbiz.order.order.OrderServices" invoke="associateOrderWithAllocationPlans">
+        <description>Associate order with the allocation plans of inline products</description>
+        <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="planMethodEnumId" type="String" mode="IN" optional="true"/>
+        <attribute name="productPlanMap" mode="OUT" type="Map" optional="true"/>
+    </service>
+    <service name="completeAllocationPlanItems" engine="java" auth="true"
+            location="org.apache.ofbiz.order.order.OrderServices" invoke="completeAllocationPlanItems">
+        <description>Mark all the items of an allocation plan as complete</description>
+        <attribute name="planId" type="String" mode="IN"/>
+    </service>
+    <service name="cancelAllocationPlanItems" engine="java" auth="true"
+            location="org.apache.ofbiz.order.order.OrderServices" invoke="cancelAllocationPlanItems">
+        <description>Mark all the items of an allocation plan as complete</description>
+        <attribute name="planId" type="String" mode="IN"/>
+    </service>
+    <service name="changeAllocationPlanStatus" engine="java" auth="true"
+            location="org.apache.ofbiz.order.order.OrderServices" invoke="changeAllocationPlanStatus">
+        <description>Change Allocation Plan Status</description>
+        <attribute name="planId" type="String" mode="IN"/>
+        <attribute name="statusId" type="String" mode="IN"/>
+        <attribute name="oldStatusId" type="String" mode="OUT"/>
+    </service>
+    <service name="changeAllocationPlanItemStatus" engine="java" auth="true"
+            location="org.apache.ofbiz.order.order.OrderServices" invoke="changeAllocationPlanItemStatus">
+        <description>Change Allocation Plan Item Status</description>
+        <attribute name="planId" type="String" mode="IN"/>
+        <attribute name="planItemSeqId" type="String" mode="IN"/>
+        <attribute name="statusId" type="String" mode="IN"/>
+        <attribute name="oldStatusId" type="String" mode="OUT"/>
+    </service>
 </services>
