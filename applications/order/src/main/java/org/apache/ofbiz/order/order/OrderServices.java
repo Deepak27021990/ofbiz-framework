@@ -6775,11 +6775,11 @@ public class OrderServices {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
                         "OrderErrorAllocationPlanIsNotAvailable", locale) + ": [" + orderId + ":"+ orderItemSeqId + "]");
             }
-            String planId = null;
+            List<String> planIds = new ArrayList<String>();
             Map<String, Object> serviceCtx = new HashMap<String, Object>();
             Map<String, Object> serviceResult = new HashMap<String, Object>();
             for (GenericValue allocationPlanItem : allocationPlanItems) {
-                planId = allocationPlanItem.getString("planId");
+                String planId = allocationPlanItem.getString("planId");
                 serviceCtx.put("planId", planId);
                 serviceCtx.put("planItemSeqId", allocationPlanItem.getString("planItemSeqId"));
                 serviceCtx.put("statusId", "ALLOC_PLAN_ITEM_CMPL");
@@ -6789,11 +6789,14 @@ public class OrderServices {
                     Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                 }
+                if (!planIds.contains(planId)) {
+                    planIds.add(planId);
+                }
                 serviceCtx.clear();
                 serviceResult.clear();
             }
-            //If all the allocation plan items are completed then complete the allocation plan header as well
-            if (planId != null) {
+            //If all the allocation plan items are completed then complete the allocation plan header(s) as well
+            for (String planId : planIds) {
                 allocationPlanItems = EntityQuery.use(delegator).from("AllocationPlanItem").where("planId", planId).queryList();
                 Boolean completeAllocationPlan = true;
                 for (GenericValue allocationPlanItem : allocationPlanItems) {
@@ -6846,11 +6849,11 @@ public class OrderServices {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
                         "OrderErrorAllocationPlanIsNotAvailable", locale) + ": [" + orderId + ":"+ orderItemSeqId + "]");
             }
-            String planId = null;
+            List<String> planIds = new ArrayList<String>();
             Map<String, Object> serviceCtx = new HashMap<String, Object>();
             Map<String, Object> serviceResult = new HashMap<String, Object>();
             for (GenericValue allocationPlanItem : allocationPlanItems) {
-                planId = allocationPlanItem.getString("planId");
+                String planId = allocationPlanItem.getString("planId");
                 serviceCtx.put("planId", planId);
                 serviceCtx.put("planItemSeqId", allocationPlanItem.getString("planItemSeqId"));
                 serviceCtx.put("statusId", "ALLOC_PLAN_ITEM_CNCL");
@@ -6860,11 +6863,14 @@ public class OrderServices {
                     Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                 }
+                if (!planIds.contains(planId)) {
+                    planIds.add(planId);
+                }
                 serviceCtx.clear();
                 serviceResult.clear();
             }
-            //If all the allocation plan items are cancelled then cancel the allocation plan header as well.
-            if (planId != null) {
+            //If all the allocation plan items are cancelled then cancel the allocation plan header(s) as well.
+            for (String planId : planIds) {
                 allocationPlanItems = EntityQuery.use(delegator).from("AllocationPlanItem").where("planId", planId).queryList();
                 Boolean cancelAllocationPlan = true;
                 for (GenericValue allocationPlanItem : allocationPlanItems) {
