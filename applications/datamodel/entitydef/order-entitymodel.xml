@@ -2984,7 +2984,7 @@ under the License.
             title="Allocation Plan Item Entity">
         <field name="planId" type="id"/>
         <field name="planItemSeqId" type="id"/>
-        <field name="planItemStatusId" type="id"/>
+        <field name="statusId" type="id"/>
         <field name="planMethodEnumId" type="id"/>
         <field name="orderId" type="id"/>
         <field name="orderItemSeqId" type="id"/>
@@ -2995,6 +2995,9 @@ under the License.
         <field name="lastModifiedByUserLogin" type="id-vlong"/>
         <prim-key field="planId"/>
         <prim-key field="planItemSeqId"/>
+        <relation type="one" fk-name="ALLOC_PLAN_ITM_HDR" title="Plan Id" rel-entity-name="AllocationPlanHeader">
+            <key-map field-name="planId"/>
+        </relation>
         <relation type="one" fk-name="ALLOC_PLAN_ITM_ODR_HDR" title="Order Id" rel-entity-name="OrderHeader">
             <key-map field-name="orderId"/>
         </relation>
@@ -3006,7 +3009,7 @@ under the License.
             <key-map field-name="productId"/>
         </relation>
         <relation type="one" fk-name="ALLOC_PLN_ITM_STTS" title="Plan Item Status Id" rel-entity-name="StatusItem">
-            <key-map field-name="planItemStatusId" rel-field-name="statusId"/>
+            <key-map field-name="statusId" rel-field-name="statusId"/>
         </relation>
         <relation type="one" fk-name="ALLOC_PLN_ITM_ENUM" title="Plan Method Enum Id" rel-entity-name="Enumeration">
             <key-map field-name="planMethodEnumId" rel-field-name="enumId"/>

@@ -1240,7 +1240,7 @@ under the License.
         <description>Create Allocation Plan Header</description>
         <auto-attributes include="pk" mode="IN"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="planId" mode="OUT"/>
+        <override name="planId" mode="INOUT"/>
         <override name="planTypeId" optional="false"/>
     </service>
     <service name="updateAllocationPlanHeader" engine="entity-auto" default-entity-name="AllocationPlanHeader" invoke="update" auth="true">
@@ -1302,5 +1302,17 @@ under the License.
         <attribute name="planItemSeqId" type="String" mode="IN"/>
         <attribute name="statusId" type="String" mode="IN"/>
         <attribute name="oldStatusId" type="String" mode="OUT"/>
+    </service>
+    <service name="completeAllocationPlanItemByOrderItem" engine="java" auth="true"
+            location="org.apache.ofbiz.order.order.OrderServices" invoke="completeAllocationPlanItemByOrderItem">
+        <description>Complete Allocation Plan Item By Providing Order Id and Item Seq Id</description>
+        <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="cancelAllocationPlanItemByOrderItem" engine="java" auth="true"
+            location="org.apache.ofbiz.order.order.OrderServices" invoke="cancelAllocationPlanItemByOrderItem">
+        <description>Cancel Allocation Plan Item By Providing Order Id and Item Seq Id</description>
+        <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
     </service>
 </services>
