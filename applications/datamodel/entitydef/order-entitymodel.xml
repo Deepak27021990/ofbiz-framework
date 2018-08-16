@@ -2963,19 +2963,19 @@ under the License.
         <field name="lastModifiedByUserLogin" type="id-vlong"/>
         <prim-key field="planId"/>
         <prim-key field="productId"/>
-        <relation type="one" fk-name="ALLOC_PLN_HDR_PRODUCT" title="Product Id" rel-entity-name="Product">
+        <relation type="one" fk-name="ALC_PLN_HDR_PRO" title="Product Id" rel-entity-name="Product">
             <key-map field-name="productId"/>
         </relation>
-        <relation type="one" fk-name="ALLOC_PLAN_HDR_TYPE" title="Plan Type Id" rel-entity-name="AllocationPlanType">
+        <relation type="one" fk-name="ALC_PLN_HDR_TYP" title="Plan Type Id" rel-entity-name="AllocationPlanType">
             <key-map field-name="planTypeId"/>
         </relation>
-        <relation type="one" fk-name="ALLOC_PLN_HDR_STTS" title="Status Id" rel-entity-name="StatusItem">
+        <relation type="one" fk-name="ALC_PLN_HDR_STS" title="Status Id" rel-entity-name="StatusItem">
             <key-map field-name="statusId" rel-field-name="statusId"/>
         </relation>
-        <relation type="one" fk-name="ALLOC_PLN_HDR_CBUL" title="Created By" rel-entity-name="UserLogin">
+        <relation type="one" fk-name="ALC_PLN_HDR_CBUL" title="Created By" rel-entity-name="UserLogin">
             <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
         </relation>
-        <relation type="one" fk-name="ALLOC_PLN_HDR_LMUL" title="Last Modified By" rel-entity-name="UserLogin">
+        <relation type="one" fk-name="ALC_PLN_HDR_LMUL" title="Last Modified By" rel-entity-name="UserLogin">
             <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
         </relation>
     </entity>
@@ -2995,29 +2995,29 @@ under the License.
         <field name="lastModifiedByUserLogin" type="id-vlong"/>
         <prim-key field="planId"/>
         <prim-key field="planItemSeqId"/>
-        <relation type="one" fk-name="ALLOC_PLAN_ITM_HDR" title="Plan Id" rel-entity-name="AllocationPlanHeader">
+        <relation type="one" fk-name="ALC_PLN_ITM_HDR" title="Plan Id" rel-entity-name="AllocationPlanHeader">
             <key-map field-name="planId"/>
         </relation>
-        <relation type="one" fk-name="ALLOC_PLAN_ITM_ODR_HDR" title="Order Id" rel-entity-name="OrderHeader">
+        <relation type="one" fk-name="ALC_PLN_ITM_ODRHDR" title="Order Id" rel-entity-name="OrderHeader">
             <key-map field-name="orderId"/>
         </relation>
-        <relation type="one" fk-name="ALLOC_PLAN_ITM_ODR_ITM" title="Order Item" rel-entity-name="OrderItem">
+        <relation type="one" fk-name="ALC_PLN_ITM_ODRITM" title="Order Item" rel-entity-name="OrderItem">
             <key-map field-name="orderId"/>
             <key-map field-name="orderItemSeqId"/>
         </relation>
-        <relation type="one" fk-name="ALLOC_PLN_ITM_PRODUCT" title="Product Id" rel-entity-name="Product">
+        <relation type="one" fk-name="ALC_PLN_ITM_PRO" title="Product Id" rel-entity-name="Product">
             <key-map field-name="productId"/>
         </relation>
-        <relation type="one" fk-name="ALLOC_PLN_ITM_STTS" title="Plan Item Status Id" rel-entity-name="StatusItem">
+        <relation type="one" fk-name="ALC_PLN_ITM_STS" title="Plan Item Status Id" rel-entity-name="StatusItem">
             <key-map field-name="statusId" rel-field-name="statusId"/>
         </relation>
-        <relation type="one" fk-name="ALLOC_PLN_ITM_ENUM" title="Plan Method Enum Id" rel-entity-name="Enumeration">
+        <relation type="one" fk-name="ALC_PLN_ITM_ENUM" title="Plan Method Enum Id" rel-entity-name="Enumeration">
             <key-map field-name="planMethodEnumId" rel-field-name="enumId"/>
         </relation>
-        <relation type="one" fk-name="ALLOC_PLN_ITM_CBUL" title="Created By User Login" rel-entity-name="UserLogin">
+        <relation type="one" fk-name="ALC_PLN_ITM_CBUL" title="Created By User Login" rel-entity-name="UserLogin">
             <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
         </relation>
-        <relation type="one" fk-name="ALLOC_PLN_ITM_LMUL" title="Last Modified By User Login" rel-entity-name="UserLogin">
+        <relation type="one" fk-name="ALC_PLN_ITM_LMUL" title="Last Modified By User Login" rel-entity-name="UserLogin">
             <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
         </relation>
     </entity>
