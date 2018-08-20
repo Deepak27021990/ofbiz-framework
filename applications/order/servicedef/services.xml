@@ -1275,7 +1275,6 @@ under the License.
             location="org.apache.ofbiz.order.order.OrderServices" invoke="associateOrderWithAllocationPlans">
         <description>Associate order with the allocation plans of inline products</description>
         <attribute name="orderId" type="String" mode="IN"/>
-        <attribute name="planMethodEnumId" type="String" mode="IN" optional="true"/>
         <attribute name="productPlanMap" mode="OUT" type="Map" optional="true"/>
     </service>
     <service name="completeAllocationPlanItems" engine="java" auth="true"

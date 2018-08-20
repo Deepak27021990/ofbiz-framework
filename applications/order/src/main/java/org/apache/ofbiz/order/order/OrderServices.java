@@ -6458,16 +6458,12 @@ public class OrderServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin  = (GenericValue)context.get("userLogin");
         String orderId = (String) context.get("orderId");
-        String planMethodEnumId = (String) context.get("planMethodEnumId");
         Map<String, String> productPlanMap = new HashMap<String, String>();
         Map<String, Object> serviceResult = new HashMap<String, Object>();
         try {
             String userLoginId = null;
             if (userLogin != null) {
                 userLoginId = userLogin.getString("userLoginId");
-            }
-            if (planMethodEnumId == null) {
-                planMethodEnumId = "MANUAL";
             }
             //Get the list of associated products
             OrderReadHelper orderReadHelper = new OrderReadHelper(delegator, orderId);
@@ -6476,6 +6472,13 @@ public class OrderServices {
             for (GenericValue orderItem : orderItems) {
                 String orderItemSeqId = orderItem.getString("orderItemSeqId");
                 String productId = orderItem.getString("productId");
+                String planMethodEnumId = null;
+                GenericValue orderItemAttribute = EntityQuery.use(delegator).from("OrderItemAttribute").where("orderId", orderId, "orderItemSeqId", orderItemSeqId, "attrName", "autoReserve").queryOne();
+                if (orderItemAttribute != null && "true".equals(orderItemAttribute.getString("attrValue"))) {
+                    planMethodEnumId = "AUTO";
+                } else {
+                    planMethodEnumId = "MANUAL";
+                }
                 //Look for any existing open allocation plan, if not available create a new one
                 String planId = null;
                 GenericValue allocationPlanHeader = EntityQuery.use(delegator).from("AllocationPlanHeader").where("productId", productId, "planTypeId", "SALES_ORD_ALLOCATION", "statusId", "ALLOC_PLAN_CREATED").queryFirst();
@@ -6537,7 +6540,9 @@ public class OrderServices {
                     serviceCtx.put("planId", planId);
                     serviceCtx.put("planItemSeqId", planItemSeqId);
                     serviceCtx.put("planMethodEnumId", planMethodEnumId);
-                    serviceCtx.put("allocatedQuantity", orderItem.getBigDecimal("quantity"));
+                    if ("AUTO".equals(planMethodEnumId)) {
+                        serviceCtx.put("allocatedQuantity", orderItem.getBigDecimal("quantity"));
+                    }
                     serviceCtx.put("lastModifiedByUserLogin", userLoginId);
                     serviceCtx.put("userLogin", userLogin);
                     serviceResult = dispatcher.runSync("updateAllocationPlanItem", serviceCtx);

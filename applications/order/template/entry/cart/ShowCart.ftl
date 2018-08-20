@@ -171,6 +171,16 @@ under the License.
                   </td>
                 </tr>
                 <tr>
+                  <td align="right"><div>${uiLabelMap.OrderAutoReserve}</div></td>
+                  <td>
+                    <div>
+                      <label>
+                        <input type="checkbox" name="order_item_attr_autoReserve" value="true" <#if autoReserve??>checked="checked"</#if> />
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
                   <td></td>
                   <td><input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddToOrder}"/></td>
                 </tr>

@@ -2389,6 +2389,9 @@
         <value xml:lang="zh-CN">自动建立调整</value>
         <value xml:lang="zh-TW">自動新建調整</value>
     </property>
+    <property key="OrderAutoReserve">
+        <value xml:lang="en">Auto Reserve</value>
+    </property>
     <property key="OrderAverageRating">
         <value xml:lang="ar">متوسط التقييم</value>
         <value xml:lang="cs">Průměrné hodnocení</value>
