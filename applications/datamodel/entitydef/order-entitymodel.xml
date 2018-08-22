@@ -2973,6 +2973,9 @@ under the License.
             <key-map field-name="workEffortId"/>
         </relation>
     </entity>
+    <extend-entity entity-name="OrderItem">
+        <field name="reserveAfterDate" type="date-time"></field>
+    </extend-entity>
 
  </entitymodel>
  
