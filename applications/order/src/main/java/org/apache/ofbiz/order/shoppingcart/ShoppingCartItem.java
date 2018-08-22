@@ -303,6 +303,22 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     }
 
+    /*
+     * Makes a ShoppingCartItem and adds it to the cart.
+     * @param reserveAfterDate Optional.
+    */
+    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, BigDecimal selectedAmount, BigDecimal quantity, BigDecimal unitPrice,
+            Timestamp reservStart, BigDecimal reservLength, BigDecimal reservPersons,String accommodationMapId,String accommodationSpotId, Timestamp shipBeforeDate, Timestamp shipAfterDate,
+            Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes, String prodCatalogId, ProductConfigWrapper configWrapper,
+            String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher, ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool, String parentProductId, Boolean skipInventoryChecks, Boolean skipProductChecks)
+            throws CartItemModifyException, ItemNotFoundException {
+        return makeItem(cartLocation, productId, selectedAmount, quantity, unitPrice,
+                        reservStart, reservLength, reservPersons, accommodationMapId, accommodationSpotId, shipBeforeDate, shipAfterDate, null,
+                        additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper,
+                        itemType, itemGroup, dispatcher, cart, triggerExternalOpsBool, triggerPriceRulesBool,
+                        parentProductId, skipInventoryChecks, skipProductChecks);
+    }
+
     /**
      * Makes a ShoppingCartItem and adds it to the cart.
      * @param accommodationMapId Optional. reservations add into workeffort
