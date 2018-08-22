@@ -109,6 +109,20 @@ public class ShoppingCartHelper {
 
         return addToCart(catalogId,shoppingListId,shoppingListItemSeqId,productId,
                 productCategoryId,itemType,itemDescription,price,amount,quantity,
+                reservStart,reservLength,reservPersons,null,null,shipBeforeDate,shipAfterDate,
+                configWrapper,itemGroupNumber,context,parentProductId);
+    }
+
+    /** Overriden for reserveAfterDate. */
+    public Map<String, Object> addToCart(String catalogId, String shoppingListId, String shoppingListItemSeqId, String productId,
+            String productCategoryId, String itemType, String itemDescription,
+            BigDecimal price, BigDecimal amount, BigDecimal quantity,
+            java.sql.Timestamp reservStart, BigDecimal reservLength, BigDecimal reservPersons, String accommodationMapId,String accommodationSpotId,
+            java.sql.Timestamp shipBeforeDate, java.sql.Timestamp shipAfterDate,
+            ProductConfigWrapper configWrapper, String itemGroupNumber, Map<String, ? extends Object> context, String parentProductId) {
+
+        return addToCart(catalogId,shoppingListId,shoppingListItemSeqId,productId,
+                productCategoryId,itemType,itemDescription,price,amount,quantity,
                 reservStart,reservLength,reservPersons,null,null,shipBeforeDate,shipAfterDate,null,
                 configWrapper,itemGroupNumber,context,parentProductId);
     }
