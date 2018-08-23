@@ -4275,7 +4275,6 @@ public class OrderServices {
         toStore.addAll(cart.makeAllShipGroupInfos());
         toStore.addAll(cart.makeAllOrderPaymentInfos(dispatcher));
         toStore.addAll(cart.makeAllOrderItemAttributes(orderId, ShoppingCart.FILLED_ONLY));
-
         List<GenericValue> toRemove = new LinkedList<>();
         if (deleteItems) {
             // flag to delete existing order items and adjustments
@@ -6918,6 +6917,58 @@ public class OrderServices {
             return ServiceUtil.returnError(e.getMessage());
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
+    }
+    public static Map<String, Object> updateAllocatedQuantityOnOrderItemChange(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin  = (GenericValue)context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
+        String orderId = (String) context.get("orderId");
+        try {
+            OrderReadHelper orderReadHelper = new OrderReadHelper(delegator, orderId);
+            List<GenericValue> orderItems = orderReadHelper.getOrderItems();
+            for (GenericValue orderItem : orderItems) {
+                String orderItemSeqId = orderItem.getString("orderItemSeqId");
+                List<EntityExpr> exprs = new ArrayList<>();
+                exprs.add(EntityCondition.makeCondition("orderId", orderId));
+                exprs.add(EntityCondition.makeCondition("orderItemSeqId", orderItemSeqId));
+                exprs.add(EntityCondition.makeCondition("changeTypeEnumId", "ODR_ITM_UPDATE"));
+                exprs.add(EntityCondition.makeCondition("quantity", EntityOperator.NOT_EQUAL, null));
+                GenericValue orderItemChange = EntityQuery.use(delegator).from("OrderItemChange").where(exprs).orderBy("-changeDatetime").queryFirst();
+                if (orderItemChange != null) {
+                    BigDecimal quantityChanged = orderItemChange.getBigDecimal("quantity");
+                    if (quantityChanged.compareTo(BigDecimal.ZERO) < 0) {
+                        Debug.log("=========quantity decreased==========="+quantityChanged);
+                        GenericValue allocationPlanItem = EntityQuery.use(delegator).from("AllocationPlanItem").where("orderId", orderId, "orderItemSeqId", orderItemSeqId, "statusId", "ALLOC_PLAN_ITEM_CRTD", "productId", orderItem.getString("productId")).queryFirst();
+                        if (allocationPlanItem != null) {
+                            BigDecimal revisedQuantity = orderItem.getBigDecimal("quantity");
+                            BigDecimal allocatedQuantity = allocationPlanItem.getBigDecimal("allocatedQuantity");
+                            if (allocatedQuantity != null && allocatedQuantity.compareTo(revisedQuantity) > 0) {
+                                //Allocated Quantity is more than the revisedQuantity quantity, reduce it and release the excess reservations
+                                Map<String, Object> serviceCtx = new HashMap<String, Object>();
+                                serviceCtx.put("planId", allocationPlanItem.getString("planId"));
+                                serviceCtx.put("planItemSeqId", allocationPlanItem.getString("planItemSeqId"));
+                                serviceCtx.put("allocatedQuantity", revisedQuantity);
+                                serviceCtx.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+                                serviceCtx.put("userLogin", userLogin);
+                                Map<String, Object> serviceResult = dispatcher.runSync("updateAllocationPlanItem", serviceCtx);
+                                if (ServiceUtil.isError(serviceResult)) {
+                                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                                }
+                            }
+                        }
+                    } else if (quantityChanged.compareTo(BigDecimal.ZERO) > 0) {
+                        Debug.log("=========quantity increased==========="+quantityChanged);
+                    }
+                }
+            }
+        } catch (GenericEntityException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        } catch (GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();

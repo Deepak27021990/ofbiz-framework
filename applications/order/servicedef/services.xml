@@ -1314,4 +1314,10 @@ under the License.
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
     </service>
+    <service name="updateAllocatedQuantityOnOrderItemChange" engine="java" auth="true"
+            location="org.apache.ofbiz.order.order.OrderServices" invoke="updateAllocatedQuantityOnOrderItemChange">
+        <description>Update Allocated Quantity On Order Item Change</description>
+        <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+    </service>
 </services>

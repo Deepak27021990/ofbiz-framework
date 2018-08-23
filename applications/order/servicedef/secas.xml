@@ -95,6 +95,9 @@ under the License.
         <condition field-name="statusId" operator="equals" value="ITEM_CANCELLED"/>
         <action service="cancelAllocationPlanItemByOrderItem" mode="sync"/>
     </eca>
+    <eca service="updateOrderItems" event="commit">
+        <action service="updateAllocatedQuantityOnOrderItemChange" mode="sync"/>
+    </eca>
     <!-- order status changes -->
     <eca service="changeOrderStatus" event="commit" run-on-error="false">
         <condition field-name="statusId" operator="equals" value="ORDER_CANCELLED"/>
