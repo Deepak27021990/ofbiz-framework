@@ -657,7 +657,9 @@ public class ShoppingCartHelper {
                     } catch (CartItemModifyException e) {
                         errorMsgs.add(e.getMessage());
                     }
-                } catch (NumberFormatException nfe) {}
+                } catch (NumberFormatException nfe) {
+                    Debug.logError("Error deleting from cart: " + nfe.getMessage(), module);
+                }
             }
         }
 
