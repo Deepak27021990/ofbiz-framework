@@ -1200,12 +1200,6 @@ public class OrderServices {
                     GenericValue orderItem = itemValuesBySeqId.get(orderItemShipGroupAssoc.get("orderItemSeqId"));
 
                     if ("SALES_ORDER".equals(orderTypeId) && orderItem != null) {
-                        //If the 'reserveAfterDate' is not yet come don't reserve the inventory
-                        Timestamp reserveAfterDate = orderItem.getTimestamp("reserveAfterDate");
-                        if (UtilValidate.isNotEmpty(reserveAfterDate) && reserveAfterDate.after(UtilDateTime.nowTimestamp())) {
-                            continue;
-                        }
-
                         //If the 'autoReserve' flag is not set for the order item, don't reserve the inventory
                         OrderReadHelper orderReaderHelper = new OrderReadHelper(delegator, orderItem.getString("orderId"));
                         String autoReserve = orderReaderHelper.getOrderItemAttribute(orderItem, "autoReserve");

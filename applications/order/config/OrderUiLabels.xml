@@ -2389,9 +2389,6 @@
         <value xml:lang="zh-CN">自动建立调整</value>
         <value xml:lang="zh-TW">自動新建調整</value>
     </property>
-    <property key="OrderAutoReserve">
-        <value xml:lang="en">Auto Reserve</value>
-    </property>
     <property key="OrderAverageRating">
         <value xml:lang="ar">متوسط التقييم</value>
         <value xml:lang="cs">Průměrné hodnocení</value>
@@ -11916,12 +11913,6 @@
         <value xml:lang="vi">Mã bắt buộc để áp dụng</value>
         <value xml:lang="zh">要求使用促销代码。</value>
         <value xml:lang="zh-TW">要求使用促銷代碼.</value>
-    </property>
-    <property key="OrderReserveAfterDate">
-         <value xml:lang="en">Reserve After Date</value>
-    </property>
-    <property key="OrderReserveAfterDateDefault">
-         <value xml:lang="en">Default Reserve After Date</value>
     </property>
     <property key="OrderReturnAccept">
         <value xml:lang="ar">الموافقة للمسترجع</value>
