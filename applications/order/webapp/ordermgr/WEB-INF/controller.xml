@@ -1274,6 +1274,12 @@ under the License.
         <response name="success" type="view" value="RequirementsForSupplier"/>
     </request-map>
 
+    <!-- Allocation Plan Request Mappings -->
+    <request-map uri="FindAllocationPlan">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindAllocationPlan"/>
+    </request-map>
+
     <!-- =============== CustRequest mapping =================-->
     <request-map uri="FindRequest"><security https="true" auth="true"/><response name="success" type="view" value="FindRequest"/></request-map>
     <request-map uri="ViewRequest"><security https="true" auth="true"/><response name="success" type="view" value="ViewRequest"/></request-map>
@@ -1996,6 +2002,8 @@ under the License.
     <view-map name="ApprovedProductRequirementsByVendorReport" type="screenfop" page="component://order/widget/ordermgr/RequirementScreens.xml#ApprovedProductRequirementsByVendorReport" content-type="application/pdf" encoding="none"/>
     <view-map name="RequirementsForSupplier" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#RequirementsForSupplier"/>
     <view-map name="FindQuoteForCart" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#FindQuoteForCart"/>
+
+    <view-map name="FindAllocationPlan" type="screen" page="component://order/widget/ordermgr/AllocationPlanScreens.xml#FindAllocationPlan"/>
 
     <view-map name="FindQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#FindQuote"/>
     <view-map name="ViewQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ViewQuote"/>

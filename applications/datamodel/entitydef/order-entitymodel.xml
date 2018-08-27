@@ -2994,7 +2994,7 @@ under the License.
         <field name="lastModifiedByUserLogin" type="id-vlong"/>
         <prim-key field="planId"/>
         <prim-key field="productId"/>
-        <relation type="one" fk-name="ALC_PLN_HDR_PRO" title="Product Id" rel-entity-name="Product">
+        <relation type="many" fk-name="ALC_PLN_HDR_PRO" title="Product Id" rel-entity-name="Product">
             <key-map field-name="productId"/>
         </relation>
         <relation type="one" fk-name="ALC_PLN_HDR_TYP" title="Plan Type Id" rel-entity-name="AllocationPlanType">
@@ -3026,8 +3026,10 @@ under the License.
         <field name="lastModifiedByUserLogin" type="id-vlong"/>
         <prim-key field="planId"/>
         <prim-key field="planItemSeqId"/>
+        <prim-key field="productId"/>
         <relation type="one" fk-name="ALC_PLN_ITM_HDR" title="Plan Id" rel-entity-name="AllocationPlanHeader">
             <key-map field-name="planId"/>
+            <key-map field-name="productId"/>
         </relation>
         <relation type="one" fk-name="ALC_PLN_ITM_ODRHDR" title="Order Id" rel-entity-name="OrderHeader">
             <key-map field-name="orderId"/>
@@ -3036,7 +3038,7 @@ under the License.
             <key-map field-name="orderId"/>
             <key-map field-name="orderItemSeqId"/>
         </relation>
-        <relation type="one" fk-name="ALC_PLN_ITM_PRO" title="Product Id" rel-entity-name="Product">
+        <relation type="many" fk-name="ALC_PLN_ITM_PRO" title="Product Id" rel-entity-name="Product">
             <key-map field-name="productId"/>
         </relation>
         <relation type="one" fk-name="ALC_PLN_ITM_STS" title="Plan Item Status Id" rel-entity-name="StatusItem">
@@ -3052,5 +3054,24 @@ under the License.
             <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
         </relation>
     </entity>
+    <view-entity entity-name="AllocationPlanAndItem"
+                 package-name="org.apache.ofbiz.order.allocationplan"
+                 title="Allocation Plan And Allocation Plan Item View">
+        <member-entity entity-alias="APH" entity-name="AllocationPlanHeader"/>
+        <member-entity entity-alias="API" entity-name="AllocationPlanItem"/>
+        <alias entity-alias="APH" name="planId"/>
+        <alias entity-alias="APH" name="planName"/>
+        <alias entity-alias="APH" name="statusId"/>
+        <alias entity-alias="APH" name="planTypeId"/>
+        <alias entity-alias="APH" name="productId"/>
+        <alias entity-alias="API" name="planItemSeqId"/>
+        <alias entity-alias="API" name="orderId"/>
+        <alias entity-alias="API" name="orderItemSeqId"/>
+        <alias entity-alias="API" name="planMethodEnumId"/>
+        <alias entity-alias="API" name="allocatedQuantity"/>
+        <view-link entity-alias="APH" rel-entity-alias="API">
+          <key-map field-name="planId"/>
+          <key-map field-name="productId"/>
+        </view-link>
+    </view-entity>
  </entitymodel>
- 

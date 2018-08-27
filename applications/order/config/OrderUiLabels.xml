@@ -15476,6 +15476,9 @@
         <value xml:lang="zh">编辑需求角色</value>
         <value xml:lang="zh-TW">修改需求角色</value>
     </property>
+    <property key="PageTitleFindAllocationPlan">
+        <value xml:lang="en">Find Allocation Plan</value>
+    </property>
     <property key="PageTitleFindApprovedProductRequirements">
         <value xml:lang="ar">إيجاد متطلبات سلعة موافق عليها</value>
         <value xml:lang="de">Genehmigten Bedarf suchen</value>
