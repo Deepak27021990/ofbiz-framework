@@ -2073,6 +2073,15 @@
         <value xml:lang="zh">订单代理人</value>
         <value xml:lang="zh-TW">訂單代理人</value>
     </property>
+    <property key="OrderAllocated">
+        <value xml:lang="en">Allocated</value>
+    </property>
+    <property key="OrderAllocatedUnits">
+        <value xml:lang="en">Allocated Units</value>
+    </property>
+    <property key="OrderAllocatedValue">
+        <value xml:lang="en">Allocated Value</value>
+    </property>
     <property key="OrderAllowSolicitation">
         <value xml:lang="ar">السماح بالإستدعاءات</value>
         <value xml:lang="de">(Werbung gestatten?)</value>
@@ -2388,6 +2397,9 @@
         <value xml:lang="zh">自动创建调整</value>
         <value xml:lang="zh-CN">自动建立调整</value>
         <value xml:lang="zh-TW">自動新建調整</value>
+    </property>
+    <property key="OrderAutoReserve">
+        <value xml:lang="en">Auto Reserve</value>
     </property>
     <property key="OrderAverageRating">
         <value xml:lang="ar">متوسط التقييم</value>
@@ -4486,6 +4498,9 @@
         <value xml:lang="vi">Giá trị được miễn thuế</value>
         <value xml:lang="zh">免除金额</value>
         <value xml:lang="zh-TW">免除金額</value>
+    </property>
+    <property key="OrderExtValue">
+        <value xml:lang="en">Ext. Value</value>
     </property>
     <property key="OrderExternalId">
         <value xml:lang="ar">دليل خارجي</value>
@@ -7283,6 +7298,9 @@
         <value xml:lang="zh-CN">订单</value>
         <value xml:lang="zh-TW">訂單</value>
     </property>
+    <property key="OrderOrderingChannel">
+        <value xml:lang="en">Ordering Channel</value>
+    </property>
     <property key="OrderOrderBillFromParty">
         <value xml:lang="ar">فوترة من طرف</value>
         <value xml:lang="de">Rechnung von Akteur</value>
@@ -9272,6 +9290,12 @@
         <value xml:lang="zh">已订购的</value>
         <value xml:lang="zh-CN">订购的</value>
         <value xml:lang="zh-TW">已訂購的</value>
+    </property>
+    <property key="OrderOrderedUnits">
+        <value xml:lang="en">Ordered Units</value>
+    </property>
+    <property key="OrderOrderedValue">
+        <value xml:lang="en">Ordered Value</value>
     </property>
     <property key="OrderOrders">
         <value xml:lang="ar">أوامر البيع/الشراء</value>

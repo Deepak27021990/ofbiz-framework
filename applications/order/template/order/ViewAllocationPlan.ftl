@@ -56,7 +56,7 @@ under the License.
 <div id="allocationPlanOverview" class="screenlet">
   <div class="screenlet-title-bar">
     <ul>
-      <li class="h3">Overview [ID:${allocationPlanInfo.planId!}]</li>
+      <li class="h3">${uiLabelMap.OrderOverview} [${uiLabelMap.CommonId}:${allocationPlanInfo.planId!}]</li>
     </ul>
     <br class="clear"/>
   </div>
@@ -64,19 +64,19 @@ under the License.
     <table class="basic-table form-table" cellspacing="0">
       <tbody>
         <tr>
-          <td align="center"><label><b>Name</b></label></td>
+          <td align="center"><label><b>${uiLabelMap.CommonName}</b></label></td>
           <td align="left"><a href="/ordermgr/control/ViewAllocationPlan?planId=${allocationPlanInfo.planId!}" title="${allocationPlanInfo.planId!}"> ${allocationPlanInfo.planName!}</a></td>
-          <td align="center"><label><b>Product</b></label></td>
+          <td align="center"><label><b>${uiLabelMap.OrderProduct}</b></label></td>
           <td align="left"><a href="/catalog/control/EditProduct?productId=${allocationPlanInfo.productId!}" title="${allocationPlanInfo.productId!}">${allocationPlanInfo.productName!}</a></td>
-          <td align="center"><label><b>Created By</b></label></td>
+          <td align="center"><label><b>${uiLabelMap.CommonCreatedBy}</b></label></td>
           <td align="left">${allocationPlanInfo.createdBy!}</td>
         </tr>
         <tr>
-          <td align="center"><label><b>Status</b></label></td>
+          <td align="center"><label><b>${uiLabelMap.CommonStatus}</b></label></td>
           <td align="left">${statusItem.get("description")!}</td>
-          <td align="center"><label><b>ATP/QOH</b></label></td>
+          <td align="center"><label><b>${uiLabelMap.ProductAtp}/${uiLabelMap.ProductQoh}</b></label></td>
           <td align="left">${allocationPlanInfo.totalATP!}/${allocationPlanInfo.totalQOH!}</td>
-          <td align="center"><label><b>Created Date</b></label></td>
+          <td align="center"><label><b>${uiLabelMap.OrderRequestCreatedDate}</b></label></td>
           <td align="left">${allocationPlanInfo.createdDate!}</td>
         </tr>
       </tbody>
@@ -87,18 +87,18 @@ under the License.
 <div id="allocationPlanSummary" class="screenlet">
   <div class="screenlet-title-bar">
     <ul>
-      <li class="h3">Summary</li>
+      <li class="h3">${uiLabelMap.CommonSummary}</li>
     </ul>
     <br class="clear"/>
   </div>
   <div class="screenlet-body">
       <table class="basic-table hover-bar" cellspacing='0'>
         <tr class="header-row">
-          <td width="20%">Ordering Channel</td>
-          <td align="right" width="20%">Ordered Units</td>
-          <td align="right" width="20%">Ordered Value</td>
-          <td align="right" width="20%">Allocated Units</td>
-          <td align="right" width="20%">Allocated Value</td>
+          <td width="20%">${uiLabelMap.OrderOrderingChannel}</td>
+          <td align="right" width="20%">${uiLabelMap.OrderOrderedUnits}</td>
+          <td align="right" width="20%">${uiLabelMap.OrderOrderedValue}</td>
+          <td align="right" width="20%">${uiLabelMap.OrderAllocatedUnits}</td>
+          <td align="right" width="20%">${uiLabelMap.OrderAllocatedValue}</td>
         </tr>
         <#list allocationPlanInfo.summaryMap.keySet() as key>
           <#assign summary = allocationPlanInfo.summaryMap.get(key)/>
@@ -117,7 +117,7 @@ under the License.
 <div id="allocationPlanItems" class="screenlet">
   <div class="screenlet-title-bar">
     <ul>
-      <li class="h3">Items</li>
+      <li class="h3">${uiLabelMap.CommonItems}</li>
     </ul>
     <br class="clear"/>
   </div>
@@ -125,16 +125,16 @@ under the License.
     <table class="basic-table hover-bar" cellspacing='0'>
       <tr class="header-row">
         <td width="5%"></td>
-        <td width="10%">Sales Channel</td>
-        <td width="10%">Customer</td>
-        <td width="10%">Order Id</td>
-        <td width="10%">Order Item Seq Id</td>
-        <td width="10%">Est. Ship Date</td>
-        <td align="right" width="10%">Ordered</td>
-        <td align="right" width="10%">Reserved</td>
-        <td align="right" width="10%">Ext. Value</td>
-        <td align="right" width="10%">Allocated Units</td>
-        <td align="center" width="5%">Action</td>
+        <td width="10%">${uiLabelMap.OrderSalesChannel}</td>
+        <td width="10%">${uiLabelMap.OrderCustomer}</td>
+        <td width="10%">${uiLabelMap.FormFieldTitle_orderId}</td>
+        <td width="10%">${uiLabelMap.FormFieldTitle_orderItemSeqId}</td>
+        <td width="10%">${uiLabelMap.FormFieldTitle_estimatedShipDate}</td>
+        <td align="right" width="10%">${uiLabelMap.OrderOrdered}</td>
+        <td align="right" width="10%">${uiLabelMap.ProductReserved}</td>
+        <td align="right" width="10%">${uiLabelMap.OrderExtValue}</td>
+        <td align="right" width="10%">${uiLabelMap.OrderAllocated}</td>
+        <td align="center" width="5%">${uiLabelMap.FormFieldTitle_actionEnumId}</td>
       </tr>
       <#list allocationPlanInfo.itemList as item>
         <tr>
