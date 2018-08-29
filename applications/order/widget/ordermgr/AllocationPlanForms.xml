@@ -51,7 +51,7 @@ under the License.
     <form name="ListAllocationPlan" type="list" target="" title="" list-name="allocationPlans" paginate-target="FindAllocationPlan"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="planId" widget-style="buttontext">
-            <hyperlink target-type="inter-app" description="${planId}" target="/ordermgr/control/EditAllocationPlan">
+            <hyperlink target-type="inter-app" description="${planId}" target="/ordermgr/control/ViewAllocationPlan">
                 <parameter param-name="planId"/>
             </hyperlink>
         </field>

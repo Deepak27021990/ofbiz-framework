@@ -15369,6 +15369,9 @@
         <value xml:lang="zh">编辑订单头</value>
         <value xml:lang="zh-TW">編輯訂單頭</value>
     </property>
+    <property key="PageTitleEditAllocationPlan">
+        <value xml:lang="en">Edit Allocation Plan</value>
+    </property>
     <property key="PageTitleEditQuoteItemForCustRequest">
         <value xml:lang="ar">تعديل بند عرض السعر لطلب العميل</value>
         <value xml:lang="de">Angebotsposition für Kundenanfrage bearbeiten</value>

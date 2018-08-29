@@ -1279,6 +1279,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindAllocationPlan"/>
     </request-map>
+    <request-map uri="ViewAllocationPlan">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewAllocationPlan"/>
+    </request-map>
 
     <!-- =============== CustRequest mapping =================-->
     <request-map uri="FindRequest"><security https="true" auth="true"/><response name="success" type="view" value="FindRequest"/></request-map>
@@ -2004,6 +2008,7 @@ under the License.
     <view-map name="FindQuoteForCart" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#FindQuoteForCart"/>
 
     <view-map name="FindAllocationPlan" type="screen" page="component://order/widget/ordermgr/AllocationPlanScreens.xml#FindAllocationPlan"/>
+    <view-map name="ViewAllocationPlan" type="screen" page="component://order/widget/ordermgr/AllocationPlanScreens.xml#ViewAllocationPlan"/>
 
     <view-map name="FindQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#FindQuote"/>
     <view-map name="ViewQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ViewQuote"/>
