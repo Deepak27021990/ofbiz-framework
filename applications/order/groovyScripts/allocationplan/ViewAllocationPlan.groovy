@@ -47,14 +47,13 @@ if (allocationPlanHeader) {
     allocationPlanInfo.totalATP = totalATP
     allocationPlanInfo.totalQOH = totalQOH
 
-    summaryList = []
+    summaryMap = [:];
     itemList = []
-    orderedUnitsSummary= [:]
-    orderedValueSummary = [:]
+    allocatedValueSummary = [:]
 
     allocationPlanItems = from("AllocationPlanAndItem").where("planId", planId, "productId", allocationPlanInfo.productId).queryList()
     allocationPlanItems.each { allocationPlanItem ->
-        summaryMap = [:]
+        newSummaryMap = [:]
         itemMap = [:]
         orderId = allocationPlanItem.orderId
         orderItemSeqId = allocationPlanItem.orderItemSeqId
@@ -66,10 +65,9 @@ if (allocationPlanHeader) {
             salesChannelEnumId = orderHeader.salesChannelEnumId
             salesChannel = from("Enumeration").where("enumId", salesChannelEnumId).queryOne()
             if (salesChannel) {
-                summaryMap.salesChannel = salesChannel.description
                 itemMap.salesChannel = salesChannel.description
+                newSummaryMap.salesChannel = salesChannel.description
             }
-
             orh = new OrderReadHelper(delegator, orderId)
             placingParty = orh.getPlacingParty()
             if (placingParty != null) {
@@ -89,21 +87,8 @@ if (allocationPlanHeader) {
                     orderedQuantity = quantity
                 }
                 itemMap.orderedUnits = orderedQuantity
- 
-                if (orderedUnitsSummary.containsKey(salesChannelEnumId)) {
-                    existingQuantity = orderedUnitsSummary.get(salesChannelEnumId)
-                    orderedUnitsSummary.put(salesChannelEnumId, existingQuantity.add(orderedQuantity))
-                } else {
-                    orderedUnitsSummary.put(salesChannelEnumId, orderedQuantity)
-                }
-
-                orderedValue = orderedQuantity.multiply(unitPrice);
-                if (orderedValueSummary.containsKey(salesChannelEnumId)) {
-                    existingValue = orderedValueSummary.get(salesChannelEnumId)
-                    orderedValueSummary.put(salesChannelEnumId, existingValue.add(orderedValue))
-                } else {
-                    orderedValueSummary.put(salesChannelEnumId, orderedValue)
-                }
+                newSummaryMap.orderedUnits = orderedQuantity
+                newSummaryMap.orderedValue = orderedQuantity.multiply(unitPrice)
 
                 // Reserved quantity
                 reservedQuantity = 0.0
@@ -117,33 +102,32 @@ if (allocationPlanHeader) {
             }
             allocatedQuantity = allocationPlanItem.allocatedQuantity
             if (allocatedQuantity) {
-                summaryMap.allocatedUnits = allocatedQuantity
                 itemMap.allocatedUnits = allocatedQuantity
-                summaryMap.allocatedValue = (allocatedQuantity).multiply(unitPrice)
+                newSummaryMap.allocatedUnits = allocatedQuantity
+                newSummaryMap.allocatedValue = allocatedQuantity.multiply(unitPrice)
             }
-            summaryList.add(summaryMap)
+            if (summaryMap.containsKey(salesChannelEnumId)) {
+                existingSummaryMap = summaryMap.get(salesChannelEnumId)
+                existingSummaryMap.orderedUnits += newSummaryMap.orderedUnits
+                existingSummaryMap.orderedValue += newSummaryMap.orderedValue
+                if (existingSummaryMap.allocatedUnits) {
+                    existingSummaryMap.allocatedUnits += newSummaryMap.allocatedUnits
+                } else {
+                    existingSummaryMap.allocatedUnits = newSummaryMap.allocatedUnits
+                }
+                if (existingSummaryMap.allocatedValue) {
+                    existingSummaryMap.allocatedValue += newSummaryMap.allocatedValue
+                } else {
+                    existingSummaryMap.allocatedValue = newSummaryMap.allocatedValue
+                }
+                summaryMap.put(salesChannelEnumId, existingSummaryMap)
+            } else {
+                summaryMap.put(salesChannelEnumId, newSummaryMap)
+            }
         }
         itemList.add(itemMap)
     }
-    println "===========orderedUnitsSummary=========="+orderedUnitsSummary
-    println "===========orderedValueSummary=========="+orderedValueSummary
-
-    hashMap = [:]
-    summaryList.each { summary ->
-        if (!hashMap.containsKey(summary.salesChannel)) {
-            list = [];
-            list.add(summary);
-            hashMap.put(summary.salesChannel, list);
-        } else {
-            hashMap.get(summary.salesChannel).add(summary);
-        }
-    }
-
-    println "==========summaryList==========="+summaryList
-    println "==========hashMap==========="+hashMap
-    allocationPlanInfo.summaryList = summaryList
+    allocationPlanInfo.summaryMap = summaryMap
     allocationPlanInfo.itemList = itemList
-} else {
-    
 }
 context.allocationPlanInfo = allocationPlanInfo

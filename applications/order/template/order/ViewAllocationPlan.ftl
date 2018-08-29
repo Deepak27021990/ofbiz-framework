@@ -104,7 +104,8 @@ under the License.
           <td align="right" width="20%">Allocated Units</td>
           <td align="right" width="20%">Allocated Value</td>
         </tr>
-        <#list allocationPlanInfo.summaryList as summary>
+        <#list allocationPlanInfo.summaryMap.keySet() as key>
+          <#assign summary = allocationPlanInfo.summaryMap.get(key)/>
           <tr>
             <td>${summary.salesChannel!}</td>
             <td align="right">${summary.orderedUnits!}</td>
