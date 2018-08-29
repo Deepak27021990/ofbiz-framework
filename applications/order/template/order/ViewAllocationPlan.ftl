@@ -56,7 +56,7 @@ under the License.
 <div id="allocationPlanOverview" class="screenlet">
   <div class="screenlet-title-bar">
     <ul>
-      <li class="h3">Overview</li>
+      <li class="h3">Overview [ID:${allocationPlanInfo.planId!}]</li>
     </ul>
     <br class="clear"/>
   </div>
@@ -64,24 +64,20 @@ under the License.
     <table class="basic-table form-table" cellspacing="0">
       <tbody>
         <tr>
-          <td><label>Name</label></td>
-          <td>${allocationPlanInfo.planName!}</td>
-          <td><label>Product</label></td>
-          <td>${allocationPlanInfo.productId!}</td>
-          <td></td>
-          <td></td>
-          <td><label>Created By</label></td>
-          <td>${allocationPlanInfo.createdBy!}</td>
+          <td align="center"><label><b>Name</b></label></td>
+          <td align="left"><a href="/ordermgr/control/ViewAllocationPlan?planId=${allocationPlanInfo.planId!}" title="${allocationPlanInfo.planId!}"> ${allocationPlanInfo.planName!}</a></td>
+          <td align="center"><label><b>Product</b></label></td>
+          <td align="left"><a href="/catalog/control/EditProduct?productId=${allocationPlanInfo.productId!}" title="${allocationPlanInfo.productId!}">${allocationPlanInfo.productName!}</a></td>
+          <td align="center"><label><b>Created By</b></label></td>
+          <td align="left">${allocationPlanInfo.createdBy!}</td>
         </tr>
         <tr>
-          <td><label>Status</label></td>
-          <td>${statusItem.get("description")!}</td>
-          <td><label>ATP/QOH</label></td>
-          <td>${allocationPlanInfo.totalATP!}/${allocationPlanInfo.totalQOH!}</td>
-          <td></td>
-          <td></td>
-          <td><label>Created Date</label></td>
-          <td>${allocationPlanInfo.createdDate!}</td>
+          <td align="center"><label><b>Status</b></label></td>
+          <td align="left">${statusItem.get("description")!}</td>
+          <td align="center"><label><b>ATP/QOH</b></label></td>
+          <td align="left">${allocationPlanInfo.totalATP!}/${allocationPlanInfo.totalQOH!}</td>
+          <td align="center"><label><b>Created Date</b></label></td>
+          <td align="left">${allocationPlanInfo.createdDate!}</td>
         </tr>
       </tbody>
     </table>
@@ -144,8 +140,8 @@ under the License.
         <tr>
           <td></td>
           <td>${item.salesChannel!}</td>
-          <td>${item.partyName!}</td>
-          <td>${item.orderId!}</td>
+          <td><a href="/partymgr/control/viewprofile?partyId=${item.partyId!}" title="${item.partyId!}">${item.partyName!}</a></td>
+          <td><a href="/ordermgr/control/orderview?orderId=${item.orderId!}" title="${item.orderId!}">${item.orderId!}</a></td>
           <td>${item.orderItemSeqId!}</td>
           <td>${item.estimatedShipDate!}</td>
           <td align="right">${item.orderedUnits!}</td>

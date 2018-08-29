@@ -26,13 +26,20 @@ planId = parameters.planId
 allocationPlanInfo = [:]
 allocationPlanHeader = from("AllocationPlanHeader").where("planId", planId).queryFirst()
 if (allocationPlanHeader) {
+    allocationPlanInfo.planId = planId
     allocationPlanInfo.planName = allocationPlanHeader.planName
     allocationPlanInfo.statusId = allocationPlanHeader.statusId
     allocationPlanInfo.productId = allocationPlanHeader.productId
     allocationPlanInfo.createdBy = allocationPlanHeader.createdByUserLogin
     allocationPlanInfo.createdDate = allocationPlanHeader.createdStamp
 
-    // inventory quantity summary by facility: For every warehouse the product's ATP and QOH
+    //Get product information
+    product = from("Product").where("productId", allocationPlanHeader.productId).queryOne()
+    if (product) {
+        allocationPlanInfo.productName = product.internalName
+    }
+
+    // Inventory quantity summary by facility: For every warehouse the product's ATP and QOH
     // are obtained (calling the "getInventoryAvailableByFacility" service)
     totalATP = 0
     totalQOH = 0
@@ -47,7 +54,7 @@ if (allocationPlanHeader) {
     allocationPlanInfo.totalATP = totalATP
     allocationPlanInfo.totalQOH = totalQOH
 
-    summaryMap = [:];
+    summaryMap = [:]
     itemList = []
     allocatedValueSummary = [:]
 
@@ -76,7 +83,7 @@ if (allocationPlanHeader) {
             }
 
             orderItem = from("OrderItem").where("orderId", orderId, "orderItemSeqId", orderItemSeqId).queryOne()
-            unitPrice = 0;
+            unitPrice = 0
             if (orderItem) {
                 unitPrice = orderItem.unitPrice
                 cancelQuantity = orderItem.cancelQuantity
