@@ -12025,9 +12025,11 @@
     </property>
     <property key="OrderReserveAfterDate">
          <value xml:lang="en">Reserve After Date</value>
+         <value xml:lang="fr">Réserver après cette date</value>
     </property>
     <property key="OrderReserveAfterDateDefault">
          <value xml:lang="en">Default Reserve After Date</value>
+         <value xml:lang="fr">Date de réservation par défaut</value>
     </property>
     <property key="OrderReturnAccept">
         <value xml:lang="ar">الموافقة للمسترجع</value>
