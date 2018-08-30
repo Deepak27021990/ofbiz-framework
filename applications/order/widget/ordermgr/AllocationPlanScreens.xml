@@ -90,4 +90,33 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="EditAllocationPlan">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewAllocationPlan"/>
+                <set field="headerItem" value="allocationPlan"/>
+                <set field="tabButtonItem" value="EditAllocationPlan"/>
+                <set field="planId" from-field="parameters.planId"/>
+                <set field="editMode" value="true" type="Boolean"/>
+                <!-- asmselect parameters, must be prefixed by asm_ for SetMultipleSelectJs.ftl -->
+                <set field="asm_multipleSelectForm" value="updateAllocationPlanItems"/>
+                <set field="asm_formSize" value="1000"/>
+                <set field="asm_asmListItemPercentOfForm" value="95"/>
+                <set field="asm_sortable" value="false"/>
+                <script location="component://order/groovyScripts/allocationplan/ViewAllocationPlan.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAllocationPlanDecorator" location="${parameters.commonAllocationPlanDecorator}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://common-theme/template/includes/SetMultipleSelectJs.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://order/template/order/ViewAllocationPlan.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

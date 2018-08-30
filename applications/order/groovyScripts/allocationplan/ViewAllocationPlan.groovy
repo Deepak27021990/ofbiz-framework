@@ -66,6 +66,7 @@ if (allocationPlanHeader) {
         orderItemSeqId = allocationPlanItem.orderItemSeqId
         itemMap.orderId = allocationPlanItem.orderId
         itemMap.orderItemSeqId = allocationPlanItem.orderItemSeqId
+        itemMap.planItemSeqId = allocationPlanItem.planItemSeqId
 
         orderHeader = from("OrderHeader").where("orderId", orderId).queryOne()
         if (orderHeader) {

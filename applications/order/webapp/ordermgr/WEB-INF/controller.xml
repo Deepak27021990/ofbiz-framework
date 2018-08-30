@@ -1283,6 +1283,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ViewAllocationPlan"/>
     </request-map>
+    <request-map uri="EditAllocationPlan">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditAllocationPlan"/>
+    </request-map>
 
     <!-- =============== CustRequest mapping =================-->
     <request-map uri="FindRequest"><security https="true" auth="true"/><response name="success" type="view" value="FindRequest"/></request-map>
@@ -2009,6 +2013,7 @@ under the License.
 
     <view-map name="FindAllocationPlan" type="screen" page="component://order/widget/ordermgr/AllocationPlanScreens.xml#FindAllocationPlan"/>
     <view-map name="ViewAllocationPlan" type="screen" page="component://order/widget/ordermgr/AllocationPlanScreens.xml#ViewAllocationPlan"/>
+    <view-map name="EditAllocationPlan" type="screen" page="component://order/widget/ordermgr/AllocationPlanScreens.xml#EditAllocationPlan"/>
 
     <view-map name="FindQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#FindQuote"/>
     <view-map name="ViewQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ViewQuote"/>

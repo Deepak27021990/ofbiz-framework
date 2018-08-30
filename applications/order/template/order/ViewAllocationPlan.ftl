@@ -52,6 +52,9 @@ under the License.
 </script>
 
 <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : allocationPlanInfo.statusId!}, false)!/>
+<#if !editMode?exists>
+    <#assign editMode = false/>
+</#if>
 <#-- Overview Section -->
 <div id="allocationPlanOverview" class="screenlet">
   <div class="screenlet-title-bar">
@@ -118,13 +121,22 @@ under the License.
   <div class="screenlet-title-bar">
     <ul>
       <li class="h3">${uiLabelMap.CommonItems}</li>
+      <#if editMode>
+        <li><a href="/ordermgr/control/ViewAllocationPlan?planId=${allocationPlanInfo.planId!}" class="buttontext">${uiLabelMap.CommonCancel}</a></li>
+        <li><a href="/ordermgr/control/updateAllocationPlan?planId=${allocationPlanInfo.planId!}" class="buttontext">${uiLabelMap.CommonSave}</a></li>
+      <#else>
+        <li><a href="/ordermgr/control/EditAllocationPlan?planId=${allocationPlanInfo.planId!}" class="buttontext">${uiLabelMap.CommonEdit}</a></li>
+      </#if>
     </ul>
     <br class="clear"/>
   </div>
   <div class="screenlet-body">
+    <form class="basic-form" name="updateAllocationPlanItems" id="updateAllocationPlanItems" method="post" action="javascript:void(0);">
     <table class="basic-table hover-bar" cellspacing='0'>
       <tr class="header-row">
-        <td width="5%"></td>
+        <#if editMode>
+          <td width="5%"><label><input type="checkbox" id="checkAllItems" name="checkAllItems" onchange="javascript:toggleOrderId(this);"></label></td>
+        </#if>
         <td width="10%">${uiLabelMap.OrderSalesChannel}</td>
         <td width="10%">${uiLabelMap.OrderCustomer}</td>
         <td width="10%">${uiLabelMap.FormFieldTitle_orderId}</td>
@@ -134,11 +146,17 @@ under the License.
         <td align="right" width="10%">${uiLabelMap.ProductReserved}</td>
         <td align="right" width="10%">${uiLabelMap.OrderExtValue}</td>
         <td align="right" width="10%">${uiLabelMap.OrderAllocated}</td>
-        <td align="center" width="5%">${uiLabelMap.FormFieldTitle_actionEnumId}</td>
+        <#if editMode>
+          <td align="center" width="5%">${uiLabelMap.FormFieldTitle_actionEnumId}</td>
+        </#if>
       </tr>
       <#list allocationPlanInfo.itemList as item>
         <tr>
-          <td></td>
+          <#if editMode>
+            <td>
+              <label><input type="checkbox" name="itemSeqIdList" id="itemSeqId_${item_index}" value="${item.planItemSeqId}"/></label>
+            </td>
+          </#if>
           <td>${item.salesChannel!}</td>
           <td><a href="/partymgr/control/viewprofile?partyId=${item.partyId!}" title="${item.partyId!}">${item.partyName!}</a></td>
           <td><a href="/ordermgr/control/orderview?orderId=${item.orderId!}" title="${item.orderId!}">${item.orderId!}</a></td>
@@ -147,10 +165,15 @@ under the License.
           <td align="right">${item.orderedUnits!}</td>
           <td align="right">${item.reservedUnits!}</td>
           <td align="right">${item.extValue!}</td>
-          <td align="right">${item.allocatedUnits!}</td>
-          <td></td>
+          <#if editMode>
+            <td><input type="text" name="allocatedUnits" value="${item.allocatedUnits!}"></td>
+            <td></td>
+          <#else>
+            <td align="right">${item.allocatedUnits!}</td>
+          </#if>
         </tr>
       </#list>
     </table>
+    </form>
   </div>
 </div>
