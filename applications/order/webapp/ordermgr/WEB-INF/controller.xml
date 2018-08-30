@@ -1287,6 +1287,16 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditAllocationPlan"/>
     </request-map>
+    <request-map uri="updateAllocationPlanItems">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updateAllocationPlanItem"/>
+        <response name="success" type="request-redirect" value="ViewAllocationPlan">
+            <redirect-parameter name="planId"/>
+        </response>
+        <response name="error" type="request-redirect" value="EditAllocationPlan">
+            <redirect-parameter name="planId"/>
+        </response>
+    </request-map>
 
     <!-- =============== CustRequest mapping =================-->
     <request-map uri="FindRequest"><security https="true" auth="true"/><response name="success" type="view" value="FindRequest"/></request-map>

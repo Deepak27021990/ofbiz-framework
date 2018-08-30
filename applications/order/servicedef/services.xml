@@ -1264,7 +1264,7 @@ under the License.
     </service>
     <service name="updateAllocationPlanItem" engine="entity-auto" default-entity-name="AllocationPlanItem" invoke="update" auth="true">
         <description>Update Allocation Plan Item</description>
-        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="pk" mode="INOUT"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="deleteAllocationPlanItem" engine="entity-auto" default-entity-name="AllocationPlanItem" invoke="delete" auth="true">

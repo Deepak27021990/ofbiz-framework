@@ -18,35 +18,47 @@ under the License.
 -->
 
 <script type="application/javascript">
-    jQuery(document).ready( function() {
-        jQuery('#allcheck').change( function() {
-            setCheckboxes();
-        });
-
-        jQuery('.statuscheck').change( function() {
-            setAllCheckbox();
-        });
-    });
-
-    function setCheckboxes() {
-        if (jQuery('#allcheck').is(':checked')) {
-            jQuery('.statuscheck').attr ('checked', true);
+    function toggleAllItems(master) {
+        var form = document.updateAllocationPlanItems;
+        var length = form.elements.length;
+        for (var i = 0; i < length; i++) {
+            var element = form.elements[i];
+            if (element.name.match(/_rowSubmit_o_.*/)) {
+                element.checked = master.checked;
+            }
+        }
+        if (master.checked) {
+            jQuery('#saveItems').attr("href", "javascript:runAction();");
         } else {
-            jQuery('.statuscheck').attr ('checked', false );
+            jQuery('#saveItems').attr("href", "javascript: void(0);");
         }
     }
-    function setAllCheckbox() {
-        var allChecked = true;
-        jQuery('.statuscheck').each (function () {
-            if (!jQuery(this).is(':checked')) {
-                allChecked = false;
+
+    function runAction() {
+        var form = document.updateAllocationPlanItems;
+        form.submit();
+    }
+
+    function toggleItem() {
+        var form = document.updateAllocationPlanItems;
+        var length = form.elements.length;
+        var isAllSelected = true;
+        var isAnyOneSelected = false;
+        for (var i = 0; i < length; i++) {
+            var element = form.elements[i];
+            if (element.name.match(/_rowSubmit_o_.*/)) {
+                if (element.checked) {
+                    isAnyOneSelected = true;
+                } else {
+                    isAllSelected = false;
+                }
             }
-        });
-        if (allChecked == false && jQuery('#allcheck').is(':checked')) {
-            jQuery('#allcheck').attr('checked', false);
         }
-        if (allChecked == true && !jQuery('#allcheck').is(':checked')) {
-            jQuery('#allcheck').attr('checked', true);
+        jQuery('#checkAllItems').attr("checked", isAllSelected);
+        if (isAnyOneSelected || isAllSelected) {
+            jQuery('#saveItems').attr("href", "javascript:runAction();");
+        } else {
+            jQuery('#saveItems').attr("href", "javascript: void(0);");
         }
     }
 </script>
@@ -123,7 +135,7 @@ under the License.
       <li class="h3">${uiLabelMap.CommonItems}</li>
       <#if editMode>
         <li><a href="/ordermgr/control/ViewAllocationPlan?planId=${allocationPlanInfo.planId!}" class="buttontext">${uiLabelMap.CommonCancel}</a></li>
-        <li><a href="/ordermgr/control/updateAllocationPlan?planId=${allocationPlanInfo.planId!}" class="buttontext">${uiLabelMap.CommonSave}</a></li>
+        <li><a id="saveItems" href="javascript: void(0);" class="buttontext">${uiLabelMap.CommonSave}</a></li>
       <#else>
         <li><a href="/ordermgr/control/EditAllocationPlan?planId=${allocationPlanInfo.planId!}" class="buttontext">${uiLabelMap.CommonEdit}</a></li>
       </#if>
@@ -131,49 +143,56 @@ under the License.
     <br class="clear"/>
   </div>
   <div class="screenlet-body">
-    <form class="basic-form" name="updateAllocationPlanItems" id="updateAllocationPlanItems" method="post" action="javascript:void(0);">
-    <table class="basic-table hover-bar" cellspacing='0'>
-      <tr class="header-row">
-        <#if editMode>
-          <td width="5%"><label><input type="checkbox" id="checkAllItems" name="checkAllItems" onchange="javascript:toggleOrderId(this);"></label></td>
-        </#if>
-        <td width="10%">${uiLabelMap.OrderSalesChannel}</td>
-        <td width="10%">${uiLabelMap.OrderCustomer}</td>
-        <td width="10%">${uiLabelMap.FormFieldTitle_orderId}</td>
-        <td width="10%">${uiLabelMap.FormFieldTitle_orderItemSeqId}</td>
-        <td width="10%">${uiLabelMap.FormFieldTitle_estimatedShipDate}</td>
-        <td align="right" width="10%">${uiLabelMap.OrderOrdered}</td>
-        <td align="right" width="10%">${uiLabelMap.ProductReserved}</td>
-        <td align="right" width="10%">${uiLabelMap.OrderExtValue}</td>
-        <td align="right" width="10%">${uiLabelMap.OrderAllocated}</td>
-        <#if editMode>
-          <td align="center" width="5%">${uiLabelMap.FormFieldTitle_actionEnumId}</td>
-        </#if>
-      </tr>
-      <#list allocationPlanInfo.itemList as item>
-        <tr>
+    <#assign rowCount = 0>
+    <form class="basic-form" name="updateAllocationPlanItems" id="updateAllocationPlanItems" method="post" action="<@ofbizUrl>updateAllocationPlanItems</@ofbizUrl>">
+      <input type="hidden" name="_useRowSubmit" value="Y" />
+      <table class="basic-table hover-bar" cellspacing='0'>
+        <tr class="header-row">
           <#if editMode>
-            <td>
-              <label><input type="checkbox" name="itemSeqIdList" id="itemSeqId_${item_index}" value="${item.planItemSeqId}"/></label>
-            </td>
+            <td width="5%"><input type="checkbox" id="checkAllItems" name="checkAllItems" onchange="javascript:toggleAllItems(this);"></td>
           </#if>
-          <td>${item.salesChannel!}</td>
-          <td><a href="/partymgr/control/viewprofile?partyId=${item.partyId!}" title="${item.partyId!}">${item.partyName!}</a></td>
-          <td><a href="/ordermgr/control/orderview?orderId=${item.orderId!}" title="${item.orderId!}">${item.orderId!}</a></td>
-          <td>${item.orderItemSeqId!}</td>
-          <td>${item.estimatedShipDate!}</td>
-          <td align="right">${item.orderedUnits!}</td>
-          <td align="right">${item.reservedUnits!}</td>
-          <td align="right">${item.extValue!}</td>
+          <td width="10%">${uiLabelMap.OrderSalesChannel}</td>
+          <td width="10%">${uiLabelMap.OrderCustomer}</td>
+          <td width="10%">${uiLabelMap.FormFieldTitle_orderId}</td>
+          <td width="10%">${uiLabelMap.FormFieldTitle_orderItemSeqId}</td>
+          <td width="10%">${uiLabelMap.FormFieldTitle_estimatedShipDate}</td>
+          <td align="right" width="10%">${uiLabelMap.OrderOrdered}</td>
+          <td align="right" width="10%">${uiLabelMap.ProductReserved}</td>
+          <td align="right" width="10%">${uiLabelMap.OrderExtValue}</td>
+          <td align="right" width="10%">${uiLabelMap.OrderAllocated}</td>
           <#if editMode>
-            <td><input type="text" name="allocatedUnits" value="${item.allocatedUnits!}"></td>
-            <td></td>
-          <#else>
-            <td align="right">${item.allocatedUnits!}</td>
+            <td align="center" width="5%">${uiLabelMap.FormFieldTitle_actionEnumId}</td>
           </#if>
         </tr>
-      </#list>
-    </table>
+        <#list allocationPlanInfo.itemList as item>
+          <tr>
+            <input type="hidden" name="planId_o_${rowCount}" value="${item.planId}"/>
+            <input type="hidden" name="planItemSeqId_o_${rowCount}" value="${item.planItemSeqId}"/>
+            <input type="hidden" name="productId_o_${rowCount}" value="${item.productId}"/>
+            <#if editMode>
+              <td>
+                <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onchange="javascript:toggleItem();">
+              </td>
+            </#if>
+            <td>${item.salesChannel!}</td>
+            <td><a href="/partymgr/control/viewprofile?partyId=${item.partyId!}" title="${item.partyId!}">${item.partyName!}</a></td>
+            <td><a href="/ordermgr/control/orderview?orderId=${item.orderId!}" title="${item.orderId!}">${item.orderId!}</a></td>
+            <td>${item.orderItemSeqId!}</td>
+            <td>${item.estimatedShipDate!}</td>
+            <td align="right">${item.orderedUnits!}</td>
+            <td align="right">${item.reservedUnits!}</td>
+            <td align="right">${item.extValue!}</td>
+            <#if editMode>
+              <td><input type="text" name="allocatedQuantity_o_${rowCount}" value="${item.allocatedUnits!}"></td>
+              <td></td>
+            <#else>
+              <td align="right">${item.allocatedUnits!}</td>
+            </#if>
+          </tr>
+          <#assign rowCount = rowCount + 1>
+        </#list>
+      </table>
+      <input type="hidden" name="_rowCount" value="${rowCount}" />
     </form>
   </div>
 </div>
