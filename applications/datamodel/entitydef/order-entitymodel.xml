@@ -3069,6 +3069,7 @@ under the License.
         <alias entity-alias="API" name="orderItemSeqId"/>
         <alias entity-alias="API" name="planMethodEnumId"/>
         <alias entity-alias="API" name="allocatedQuantity"/>
+        <alias entity-alias="API" name="prioritySeqId"/>
         <view-link entity-alias="APH" rel-entity-alias="API">
           <key-map field-name="planId"/>
           <key-map field-name="productId"/>

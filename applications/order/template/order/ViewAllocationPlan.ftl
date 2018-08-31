@@ -61,6 +61,25 @@ under the License.
             jQuery('#saveItems').attr("href", "javascript: void(0);");
         }
     }
+
+    $(document).ready(function(){
+        $(".up,.down").click(function(){
+            var row = $(this).parents("tr:first");
+            if ($(this).is(".up")) {
+                row.insertBefore(row.prev());
+            } else {
+                row.insertAfter(row.next());
+            }
+
+            //run through each row and reassign the priority
+            $('#allocatioPlanItemsTable tr').each(function (i, row) {
+                if (i != 0) {
+                    var prioritySeqInput = $(row).find('.prioritySeqId');
+                    prioritySeqInput.attr("value", i);
+                }
+            });
+        });
+    });
 </script>
 
 <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : allocationPlanInfo.statusId!}, false)!/>
@@ -146,7 +165,7 @@ under the License.
     <#assign rowCount = 0>
     <form class="basic-form" name="updateAllocationPlanItems" id="updateAllocationPlanItems" method="post" action="<@ofbizUrl>updateAllocationPlanItems</@ofbizUrl>">
       <input type="hidden" name="_useRowSubmit" value="Y" />
-      <table class="basic-table hover-bar" cellspacing='0'>
+      <table id="allocatioPlanItemsTable" class="basic-table hover-bar" cellspacing='0'>
         <tr class="header-row">
           <#if editMode>
             <td width="5%"><input type="checkbox" id="checkAllItems" name="checkAllItems" onchange="javascript:toggleAllItems(this);"></td>
@@ -161,11 +180,12 @@ under the License.
           <td align="right" width="10%">${uiLabelMap.OrderExtValue}</td>
           <td align="right" width="10%">${uiLabelMap.OrderAllocated}</td>
           <#if editMode>
-            <td align="center" width="5%">${uiLabelMap.FormFieldTitle_actionEnumId}</td>
+            <td align="right" width="5%">${uiLabelMap.FormFieldTitle_actionEnumId}</td>
           </#if>
         </tr>
         <#list allocationPlanInfo.itemList as item>
           <tr>
+            <input type="hidden" name="prioritySeqId_o_${rowCount}" value="${rowCount+1}" class="prioritySeqId"/>
             <input type="hidden" name="planId_o_${rowCount}" value="${item.planId}"/>
             <input type="hidden" name="planItemSeqId_o_${rowCount}" value="${item.planItemSeqId}"/>
             <input type="hidden" name="productId_o_${rowCount}" value="${item.productId}"/>
@@ -174,17 +194,20 @@ under the License.
                 <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onchange="javascript:toggleItem();">
               </td>
             </#if>
-            <td>${item.salesChannel!}</td>
+            <td>${item.salesChannel!} ${rowCount}</td>
             <td><a href="/partymgr/control/viewprofile?partyId=${item.partyId!}" title="${item.partyId!}">${item.partyName!}</a></td>
             <td><a href="/ordermgr/control/orderview?orderId=${item.orderId!}" title="${item.orderId!}">${item.orderId!}</a></td>
             <td>${item.orderItemSeqId!}</td>
             <td>${item.estimatedShipDate!}</td>
             <td align="right">${item.orderedUnits!}</td>
             <td align="right">${item.reservedUnits!}</td>
-            <td align="right">${item.extValue!}</td>
+            <td align="right">${item.orderedValue!}</td>
             <#if editMode>
               <td><input type="text" name="allocatedQuantity_o_${rowCount}" value="${item.allocatedUnits!}"></td>
-              <td></td>
+              <td align="right">
+                <a href="#" class="up"><img src="/images/arrow-single-up-green.png"/></a>
+                <a href="#" class="down"><img src="/images/arrow-single-down-green.png"/></a>
+              </td>
             <#else>
               <td align="right">${item.allocatedUnits!}</td>
             </#if>

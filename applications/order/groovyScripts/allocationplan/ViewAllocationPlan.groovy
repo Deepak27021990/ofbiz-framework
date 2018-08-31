@@ -58,7 +58,7 @@ if (allocationPlanHeader) {
     itemList = []
     allocatedValueSummary = [:]
 
-    allocationPlanItems = from("AllocationPlanAndItem").where("planId", planId, "productId", allocationPlanInfo.productId).queryList()
+    allocationPlanItems = from("AllocationPlanAndItem").where("planId", planId, "productId", allocationPlanInfo.productId).orderBy("prioritySeqId").queryList()
     allocationPlanItems.each { allocationPlanItem ->
         newSummaryMap = [:]
         itemMap = [:]
@@ -97,6 +97,7 @@ if (allocationPlanHeader) {
                     orderedQuantity = quantity
                 }
                 itemMap.orderedUnits = orderedQuantity
+                itemMap.orderedValue = orderedQuantity.multiply(unitPrice)
                 newSummaryMap.orderedUnits = orderedQuantity
                 newSummaryMap.orderedValue = orderedQuantity.multiply(unitPrice)
 
@@ -109,6 +110,9 @@ if (allocationPlanHeader) {
                     }
                 }
                 itemMap.reservedUnits = reservedQuantity
+
+                //TODO: Estimated Ship Date, need to check the right way to get it
+                itemMap.estimatedShipDate = orderItem.estimatedShipDate
             }
             allocatedQuantity = allocationPlanItem.allocatedQuantity
             if (allocatedQuantity) {
