@@ -166,9 +166,9 @@ under the License.
   </div>
   <div class="screenlet-body">
     <#assign rowCount = 0>
-    <form class="basic-form" name="updateAllocationPlanItems" id="updateAllocationPlanItems" method="post" action="<@ofbizUrl>updateAllocationPlanItems</@ofbizUrl>">
-      <input type="hidden" name="_useRowSubmit" value="Y" />
-      <table id="allocatioPlanItemsTable" class="basic-table hover-bar" cellspacing='0'>
+    <table id="allocatioPlanItemsTable" class="basic-table hover-bar" cellspacing='0'>
+      <form class="basic-form" name="updateAllocationPlanItems" id="updateAllocationPlanItems" method="post" action="<@ofbizUrl>updateAllocationPlanItems</@ofbizUrl>">
+        <input type="hidden" name="_useRowSubmit" value="Y" />
         <tr class="header-row">
           <#if editMode>
             <td width="5%"><input type="checkbox" id="checkAllItems" name="checkAllItems" onchange="javascript:toggleAllItems(this);"></td>
@@ -217,8 +217,8 @@ under the License.
           </tr>
           <#assign rowCount = rowCount + 1>
         </#list>
-      </table>
-      <input type="hidden" name="_rowCount" value="${rowCount}" />
-    </form>
+        <input type="hidden" name="_rowCount" value="${rowCount}" />
+      </form>
+    </table>
   </div>
 </div>
