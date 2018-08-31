@@ -28,9 +28,9 @@ under the License.
             }
         }
         if (master.checked) {
-            jQuery('#saveItems').attr("href", "javascript:runAction();");
+            jQuery('#saveItemsButton').attr("href", "javascript:runAction();");
         } else {
-            jQuery('#saveItems').attr("href", "javascript: void(0);");
+            jQuery('#saveItemsButton').attr("href", "javascript: void(0);");
         }
     }
 
@@ -56,17 +56,20 @@ under the License.
         }
         jQuery('#checkAllItems').attr("checked", isAllSelected);
         if (isAnyOneSelected || isAllSelected) {
-            jQuery('#saveItems').attr("href", "javascript:runAction();");
+            jQuery('#saveItemsButton').attr("href", "javascript:runAction();");
         } else {
-            jQuery('#saveItems').attr("href", "javascript: void(0);");
+            jQuery('#saveItemsButton').attr("href", "javascript: void(0);");
         }
     }
 
     $(document).ready(function(){
         $(".up,.down").click(function(){
+            var rowCount = $('#allocatioPlanItemsTable tr').length;
             var row = $(this).parents("tr:first");
             if ($(this).is(".up")) {
-                row.insertBefore(row.prev());
+                if (row.index() != 1) {
+                    row.insertBefore(row.prev());
+                }
             } else {
                 row.insertAfter(row.next());
             }
@@ -154,7 +157,7 @@ under the License.
       <li class="h3">${uiLabelMap.CommonItems}</li>
       <#if editMode>
         <li><a href="/ordermgr/control/ViewAllocationPlan?planId=${allocationPlanInfo.planId!}" class="buttontext">${uiLabelMap.CommonCancel}</a></li>
-        <li><a id="saveItems" href="javascript: void(0);" class="buttontext">${uiLabelMap.CommonSave}</a></li>
+        <li><a id="saveItemsButton" href="javascript: void(0);" class="buttontext">${uiLabelMap.CommonSave}</a></li>
       <#else>
         <li><a href="/ordermgr/control/EditAllocationPlan?planId=${allocationPlanInfo.planId!}" class="buttontext">${uiLabelMap.CommonEdit}</a></li>
       </#if>
