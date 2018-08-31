@@ -194,7 +194,7 @@ under the License.
                 <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onchange="javascript:toggleItem();">
               </td>
             </#if>
-            <td>${item.salesChannel!} ${rowCount}</td>
+            <td>${item.salesChannel!}</td>
             <td><a href="/partymgr/control/viewprofile?partyId=${item.partyId!}" title="${item.partyId!}">${item.partyName!}</a></td>
             <td><a href="/ordermgr/control/orderview?orderId=${item.orderId!}" title="${item.orderId!}">${item.orderId!}</a></td>
             <td>${item.orderItemSeqId!}</td>
