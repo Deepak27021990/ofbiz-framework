@@ -1269,7 +1269,7 @@ under the License.
     </service>
     <service name="deleteAllocationPlanItem" engine="entity-auto" default-entity-name="AllocationPlanItem" invoke="delete" auth="true">
         <description>Delete Allocation Plan Item</description>
-        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="pk" mode="INOUT"/>
     </service>
     <service name="associateOrderWithAllocationPlans" engine="java" auth="true"
             location="org.apache.ofbiz.order.order.OrderServices" invoke="associateOrderWithAllocationPlans">

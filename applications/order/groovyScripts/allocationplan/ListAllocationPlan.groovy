@@ -51,6 +51,7 @@ allocationPlans = []
 allocationPlanItems.each { allocationPlanItem ->
     allocationPlanMap = [:]
     allocationPlanMap.planId = allocationPlanItem.planId
+    allocationPlanMap.planItemSeqId = allocationPlanItem.planItemSeqId
     allocationPlanMap.planName = allocationPlanItem.planName
     allocationPlanMap.statusId = allocationPlanItem.statusId
     allocationPlanMap.planTypeId = allocationPlanItem.planTypeId

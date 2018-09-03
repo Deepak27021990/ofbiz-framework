@@ -75,8 +75,10 @@ under the License.
             <text/>
         </field>
         <field name="deleteLink" widget-style="buttontext" title=" ">
-            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteAllocationPlan">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteAllocationPlanItem">
                 <parameter param-name="planId"/>
+                <parameter param-name="planItemSeqId"/>
+                <parameter param-name="productId"/>
             </hyperlink>
         </field>
     </form>
