@@ -1198,7 +1198,6 @@ public class OrderServices {
                         continue;
                     }
                     GenericValue orderItem = itemValuesBySeqId.get(orderItemShipGroupAssoc.get("orderItemSeqId"));
-
                     if ("SALES_ORDER".equals(orderTypeId) && orderItem != null) {
                         //If the 'autoReserve' flag is not set for the order item, don't reserve the inventory
                         OrderReadHelper orderReaderHelper = new OrderReadHelper(delegator, orderItem.getString("orderId"));
@@ -1207,7 +1206,13 @@ public class OrderServices {
                              continue;
                         }
                     }
-
+                    if ("SALES_ORDER".equals(orderTypeId) && orderItem != null) {
+                        //If the 'reserveAfterDate' is not yet come don't reserve the inventory
+                        Timestamp reserveAfterDate = orderItem.getTimestamp("reserveAfterDate");
+                        if (UtilValidate.isNotEmpty(reserveAfterDate) && reserveAfterDate.after(UtilDateTime.nowTimestamp())) {
+                            continue;
+                        }
+                    }
                     GenericValue orderItemShipGroup = orderItemShipGroupAssoc.getRelatedOne("OrderItemShipGroup", false);
                     String shipGroupFacilityId = orderItemShipGroup.getString("facilityId");
                     String itemStatus = orderItem.getString("statusId");
@@ -3676,6 +3681,7 @@ public class OrderServices {
         Map<String, String> itemAttributesMap = UtilGenerics.checkMap(context.get("itemAttributesMap"));
         Map<String, String> itemEstimatedShipDateMap = UtilGenerics.checkMap(context.get("itemShipDateMap"));
         Map<String, String> itemEstimatedDeliveryDateMap = UtilGenerics.checkMap(context.get("itemDeliveryDateMap"));
+        Map<String, String> itemReserveAfterDateMap = UtilGenerics.checkMap(context.get("itemReserveAfterDateMap"));
         Boolean calcTax = (Boolean) context.get("calcTax");
         if (calcTax == null) {
             calcTax = Boolean.TRUE;
@@ -3845,6 +3851,21 @@ public class OrderServices {
                         Timestamp shipDate = Timestamp.valueOf(estimatedShipDate);
                         ShoppingCartItem cartItem = cart.findCartItem(itemSeqId);
                         cartItem.setEstimatedShipDate(shipDate);
+                    }
+                }
+            }
+        }
+        //Update Reserve After Date
+        if (null != itemReserveAfterDateMap) {
+            for (Map.Entry<String, String> entry : itemReserveAfterDateMap.entrySet()) {
+                String itemSeqId =  entry.getKey();
+                // ignore internationalised variant of dates
+                if (!itemSeqId.endsWith("_i18n")) {
+                    String reserveAfterDateStr = entry.getValue();
+                    if (UtilValidate.isNotEmpty(reserveAfterDateStr)) {
+                        Timestamp reserveAfterDate = Timestamp.valueOf(reserveAfterDateStr);
+                        ShoppingCartItem cartItem = cart.findCartItem(itemSeqId);
+                        cartItem.setReserveAfterDate(reserveAfterDate);
                     }
                 }
             }
