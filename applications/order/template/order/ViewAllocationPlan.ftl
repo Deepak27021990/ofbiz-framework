@@ -158,7 +158,7 @@ under the License.
       <#if editMode>
         <li><a href="/ordermgr/control/ViewAllocationPlan?planId=${allocationPlanInfo.planId!}" class="buttontext">${uiLabelMap.CommonCancel}</a></li>
         <li><a id="saveItemsButton" href="javascript: void(0);" class="buttontext">${uiLabelMap.CommonSave}</a></li>
-      <#else>
+      <#elseif allocationPlanInfo.statusId! != "ALLOC_PLAN_COMPLETED" && allocationPlanInfo.statusId! != "ALLOC_PLAN_CANCELLED">
         <li><a href="/ordermgr/control/EditAllocationPlan?planId=${allocationPlanInfo.planId!}" class="buttontext">${uiLabelMap.CommonEdit}</a></li>
       </#if>
     </ul>
