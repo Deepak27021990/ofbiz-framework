@@ -37,7 +37,11 @@ if (planTypeId) {
     exprs.add(EntityCondition.makeCondition("planTypeId", EntityOperator.EQUALS, planTypeId))
 }
 if (statusId) {
-    exprs.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, statusId))
+    if (statusId instanceof String) {
+        exprs.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, statusId))
+    } else {
+        exprs.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, statusId))
+    }
 }
 if (productId) {
     exprs.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId))
