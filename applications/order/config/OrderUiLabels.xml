@@ -6191,6 +6191,9 @@
         <value xml:lang="zh">税前净价</value>
         <value xml:lang="zh-TW">稅前淨價</value>
     </property>
+    <property key="OrderNewAllocationPlan">
+        <value xml:lang="en">New Allocation Plan</value>
+    </property>
     <property key="OrderNewDropShipmentForShipGroup">
         <value xml:lang="de">Neue Direktlieferung für Versandgruppe</value>
         <value xml:lang="en">New Drop Shipment For Ship Group</value>
@@ -9988,6 +9991,9 @@
         <value xml:lang="vi">Chiếc</value>
         <value xml:lang="zh">个</value>
         <value xml:lang="zh-TW">個</value>
+    </property>
+    <property key="OrderPlanName">
+        <value xml:lang="en">Plan Name</value>
     </property>
     <property key="OrderPlannedInReceive">
         <value xml:lang="ar">الكمية المستلمة</value>
@@ -15529,6 +15535,9 @@
         <value xml:lang="vi">Duyệt yêu cầu Nguồn lực bởi Nhà bán hàng</value>
         <value xml:lang="zh">由供货商批准的产品需求</value>
         <value xml:lang="zh-TW">由供應商核准的產品需求</value>
+    </property>
+    <property key="PageTitleCreateAllocationPlan">
+        <value xml:lang="en">Create Allocation Plan</value>
     </property>
     <property key="PageTitleCreateQuoteForCustRequest">
         <value xml:lang="ar">خلق عرض سعر جديد وبند عرض السعر لطلب العميل</value>

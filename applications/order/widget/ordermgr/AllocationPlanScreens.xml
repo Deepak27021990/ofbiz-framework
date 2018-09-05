@@ -32,12 +32,40 @@ under the License.
                             </condition>
                             <widgets>
                                 <include-menu name="AllocationPlanTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                <container style="button-bar">
+                                    <link target="CreateAllocationPlan" text="${uiLabelMap.OrderNewAllocationPlan}" style="buttontext"/>
+                                </container>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
                                 <label style="h3">${uiLabelMap.OrderViewPermissionError}</label>
                             </fail-widgets>
                         </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CreateAllocationPlan">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleCreateAllocationPlan"/>
+                <set field="headerItem" value="allocationPlan"/>
+                <set field="tabButtonItem" value="CreateAllocationPlan"/>
+                <!-- <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSizeDefaultValue" value="${groovy: modelTheme.getDefaultViewSize()}" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>-->
+                <script location="component://order/groovyScripts/allocationplan/CreateAllocationPlan.groovy"/> 
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAllocationPlanDecorator" location="${parameters.commonAllocationPlanDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://common-theme/template/includes/SetMultipleSelectJs.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://order/template/order/CreateAllocationPlan.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

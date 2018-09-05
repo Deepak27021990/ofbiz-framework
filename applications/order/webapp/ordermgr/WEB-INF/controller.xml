@@ -1275,6 +1275,10 @@ under the License.
     </request-map>
 
     <!-- Allocation Plan Request Mappings -->
+    <request-map uri="CreateAllocationPlan">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateAllocationPlan"/>
+    </request-map>
     <request-map uri="FindAllocationPlan">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindAllocationPlan"/>
@@ -2027,6 +2031,7 @@ under the License.
     <view-map name="RequirementsForSupplier" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#RequirementsForSupplier"/>
     <view-map name="FindQuoteForCart" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#FindQuoteForCart"/>
 
+    <view-map name="CreateAllocationPlan" type="screen" page="component://order/widget/ordermgr/AllocationPlanScreens.xml#CreateAllocationPlan"/>
     <view-map name="FindAllocationPlan" type="screen" page="component://order/widget/ordermgr/AllocationPlanScreens.xml#FindAllocationPlan"/>
     <view-map name="ViewAllocationPlan" type="screen" page="component://order/widget/ordermgr/AllocationPlanScreens.xml#ViewAllocationPlan"/>
     <view-map name="EditAllocationPlan" type="screen" page="component://order/widget/ordermgr/AllocationPlanScreens.xml#EditAllocationPlan"/>
