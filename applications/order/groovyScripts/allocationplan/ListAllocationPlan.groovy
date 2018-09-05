@@ -19,11 +19,16 @@
 
 import org.apache.ofbiz.entity.condition.EntityOperator
 import org.apache.ofbiz.entity.condition.EntityCondition
+planId = parameters.planId
+planName = parameters.planName
+planTypeId = parameters.planTypeId
+statusId = parameters.statusId
 productId = parameters.productId
+orderId = parameters.orderId
 
 List exprs = []
-if (productId) {
-    exprs.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId))
+if (planId) {
+    exprs.add(EntityCondition.makeCondition("planId", EntityOperator.EQUALS, planId))
 }
 if (planName) {
     exprs.add(EntityCondition.makeCondition("planName", EntityOperator.LIKE, planName))
