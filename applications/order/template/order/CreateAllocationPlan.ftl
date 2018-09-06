@@ -33,7 +33,7 @@ under the License.
             ${uiLabelMap.PageTitleCreateAllocationPlan}
           </#if>
         </li>
-        <#if (allocationPlanInfo.itemList.size() > 0)>
+        <#if (allocationPlanInfo.itemList.size() &gt; 0)>
           <li><input type="submit" id="saveItemsButton" class="buttontext" value="${uiLabelMap.OrderCreatePlan}"></li>
         </#if>
       </ul>
@@ -73,7 +73,7 @@ under the License.
       <div class="screenlet-title-bar">
         <ul>
           <li class="h3">${uiLabelMap.OrderPlanItems}</li>
-          <#if (allocationPlanInfo.itemList.size() > 0)>
+          <#if (allocationPlanInfo.itemList.size() &gt; 0)>
             <#if editMode=="Y">
               <li><a href="/ordermgr/control/CreateAllocationPlan?productId=${requestParameters.productId!}&planName=${requestParameters.planName!}&editMode=N" class="buttontext">${uiLabelMap.OrderCancelEdit}</a></li>
            <#else>
