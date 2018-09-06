@@ -19,51 +19,63 @@
 
 import org.apache.ofbiz.entity.condition.EntityOperator
 import org.apache.ofbiz.entity.condition.EntityCondition
-planId = parameters.planId
-planName = parameters.planName
-planTypeId = parameters.planTypeId
-statusId = parameters.statusId
-productId = parameters.productId
-orderId = parameters.orderId
+import org.apache.ofbiz.order.order.OrderReadHelper
+import org.apache.ofbiz.party.party.PartyHelper
 
-List exprs = []
-if (planId) {
-    exprs.add(EntityCondition.makeCondition("planId", EntityOperator.EQUALS, planId))
-}
-if (planName) {
-    exprs.add(EntityCondition.makeCondition("planName", EntityOperator.LIKE, planName))
-}
-if (planTypeId) {
-    exprs.add(EntityCondition.makeCondition("planTypeId", EntityOperator.EQUALS, planTypeId))
-}
-if (statusId) {
-    if (statusId instanceof String) {
-        exprs.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, statusId))
-    } else {
-        exprs.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, statusId))
+allocationPlanInfo = [:]
+itemList = []
+productId = parameters.productId
+planName = parameters.planName
+
+if (productId) {
+    ecl = EntityCondition.makeCondition([
+                            EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId),
+                            EntityCondition.makeCondition("orderStatusId", EntityOperator.EQUALS, "ORDER_APPROVED"),
+                            EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER")],
+                        EntityOperator.AND)
+    orderAndItemList = from("OrderHeaderAndItems").where(ecl).queryList()
+    orderAndItemList.each { orderAndItem ->
+        itemMap = [:]
+        salesChannelEnumId = orderAndItem.salesChannelEnumId
+        itemMap.salesChannelEnumId = salesChannelEnumId
+        salesChannel = from("Enumeration").where("enumId", salesChannelEnumId).queryOne()
+        if (salesChannel) {
+            itemMap.salesChannel = salesChannel.description
+        }
+
+        orh = new OrderReadHelper(delegator, orderAndItem.orderId)
+        placingParty = orh.getPlacingParty()
+        if (placingParty != null) {
+            itemMap.partyId = placingParty.partyId
+            itemMap.partyName = PartyHelper.getPartyName(placingParty)
+        }
+
+        itemMap.orderId = orderAndItem.orderId
+        itemMap.orderItemSeqId = orderAndItem.orderItemSeqId
+        itemMap.estimatedShipDate = orderAndItem.estimatedShipDate
+
+        unitPrice = orderAndItem.unitPrice
+        cancelQuantity = orderAndItem.cancelQuantity
+        quantity = orderAndItem.quantity
+        if (cancelQuantity != null) {
+            orderedQuantity = quantity.subtract(cancelQuantity)
+        } else {
+            orderedQuantity = quantity
+        }
+        itemMap.orderedQuantity = orderedQuantity
+        itemMap.orderedValue = orderedQuantity.multiply(unitPrice)
+
+        // Reserved quantity
+        reservedQuantity = 0.0
+        reservations = from("OrderItemShipGrpInvRes").where("orderId", orderAndItem.orderId, "orderItemSeqId", orderAndItem.orderItemSeqId).queryList()
+        reservations.each { reservation ->
+            if (reservation.quantity) {
+                reservedQuantity += reservation.quantity
+            }
+        }
+        itemMap.reservedQuantity = reservedQuantity
+        itemList.add(itemMap)
     }
 }
-if (productId) {
-    exprs.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId))
-}
-if (orderId) {
-    exprs.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId))
-}
-ecl = EntityCondition.makeCondition(exprs, EntityOperator.OR)
-allocationPlanItems = from("AllocationPlanAndItem").where(ecl).queryList()
-allocationPlans = []
-allocationPlanItems.each { allocationPlanItem ->
-    allocationPlanMap = [:]
-    allocationPlanMap.planId = allocationPlanItem.planId
-    allocationPlanMap.planItemSeqId = allocationPlanItem.planItemSeqId
-    allocationPlanMap.planName = allocationPlanItem.planName
-    allocationPlanMap.statusId = allocationPlanItem.statusId
-    allocationPlanMap.planTypeId = allocationPlanItem.planTypeId
-    allocationPlanMap.productId = allocationPlanItem.productId
-    allocationPlanMap.orderId = allocationPlanItem.orderId
-    allocationPlanMap.orderItemSeqId = allocationPlanItem.orderItemSeqId
-    allocationPlanMap.planMethodEnumId = allocationPlanItem.planMethodEnumId
-    allocationPlanMap.allocatedQuantity = allocationPlanItem.allocatedQuantity
-    allocationPlans.add(allocationPlanMap)
-}
-context.allocationPlans = allocationPlans
+allocationPlanInfo.itemList = itemList
+context.allocationPlanInfo = allocationPlanInfo

@@ -1279,6 +1279,14 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CreateAllocationPlan"/>
     </request-map>
+    <request-map uri="createAllocationPlanAndItems">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAllocationPlanAndItems"/>
+        <response name="success" type="request-redirect" value="CreateAllocationPlan">
+            <redirect-parameter name="planId"/>
+        </response>
+        <response name="error" type="view" value="CreateAllocationPlan"/>
+    </request-map>
     <request-map uri="FindAllocationPlan">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindAllocationPlan"/>

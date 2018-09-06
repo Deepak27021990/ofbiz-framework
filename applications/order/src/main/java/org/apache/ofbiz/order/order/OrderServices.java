@@ -6988,4 +6988,77 @@ public class OrderServices {
         }
         return ServiceUtil.returnSuccess();
     }
+
+    public static Map<String, Object> createAllocationPlanAndItems(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin  = (GenericValue)context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
+        String productId = (String) context.get("productId");
+        String planName = (String) context.get("planName");
+        Integer itemListSize = (Integer) context.get("itemListSize");
+        Map<String, String> itemOrderIdMap = UtilGenerics.checkMap(context.get("itemOrderIdMap"));
+        Map<String, String> itemOrderItemSeqIdMap = UtilGenerics.checkMap(context.get("itemOrderItemSeqIdMap"));
+        Map<String, String> itemAllocatedQuantityMap = UtilGenerics.checkMap(context.get("itemAllocatedQuantityMap"));
+        Map<String, Object> serviceResult = new HashMap<String, Object>();
+        Map<String, Object> serviceCtx = new HashMap<String, Object>();
+        String planId = null;
+
+        try {
+            if (itemListSize > 0) {
+                String userLoginId = userLogin.getString("userLoginId");
+                //Create Allocation Plan Header
+                serviceCtx = new HashMap<String, Object>();
+                planId = delegator.getNextSeqId("AllocationPlanHeader");
+                serviceCtx.put("planId", planId);
+                serviceCtx.put("productId", productId);
+                serviceCtx.put("planTypeId", "SALES_ORD_ALLOCATION");
+                serviceCtx.put("statusId", "ALLOC_PLAN_CREATED");
+                serviceCtx.put("createdByUserLogin", userLoginId);
+                serviceCtx.put("userLogin", userLogin);
+                serviceResult = dispatcher.runSync("createAllocationPlanHeader", serviceCtx);
+                if (ServiceUtil.isError(serviceResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                }
+                serviceCtx.clear();
+
+                //Create Allocation Plan Items
+                for (int i=0; i<itemListSize; i++) {
+                    String orderId = itemOrderIdMap.get(String.valueOf(i));
+                    String orderItemSeqId = itemOrderItemSeqIdMap.get(String.valueOf(i));
+                    String allocatedQuantityStr = itemAllocatedQuantityMap.get(String.valueOf(i));
+                    BigDecimal allocatedQuantity = null;
+                    if (allocatedQuantityStr != null) {
+                        try {
+                            allocatedQuantity = (BigDecimal) ObjectType.simpleTypeConvert(allocatedQuantityStr, "BigDecimal", null, locale);
+                        } catch (GeneralException e) {
+                            return ServiceUtil.returnError(e.getMessage());
+                        }
+                    }
+                    serviceCtx.put("planId", planId);
+                    serviceCtx.put("statusId", "ALLOC_PLAN_ITEM_CRTD");
+                    serviceCtx.put("planMethodEnumId", "MANUAL");
+                    serviceCtx.put("orderId", orderId);
+                    serviceCtx.put("orderItemSeqId", orderItemSeqId);
+                    serviceCtx.put("productId", productId);
+                    serviceCtx.put("allocatedQuantity", allocatedQuantity);
+                    serviceCtx.put("prioritySeqId", String.valueOf(i+1));
+                    serviceCtx.put("createdByUserLogin", userLoginId);
+                    serviceCtx.put("userLogin", userLogin);
+                    serviceResult = dispatcher.runSync("createAllocationPlanItem", serviceCtx);
+                    if (ServiceUtil.isError(serviceResult)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                    }
+                    serviceCtx.clear();
+                }
+            } else {
+                return ServiceUtil.returnError("Item list is empty.");
+            }
+        } catch (GenericServiceException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        serviceResult.clear();
+        serviceResult.put("planId", planId);
+        return serviceResult;
+    }
 }

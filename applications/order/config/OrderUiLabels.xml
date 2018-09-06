@@ -2655,6 +2655,9 @@
         <value xml:lang="zh-CN">取消所有项目</value>
         <value xml:lang="zh-TW">取消全部細項</value>
     </property>
+    <property key="OrderCancelEdit">
+        <value xml:lang="en">Cancel Edit</value>
+    </property>
     <property key="OrderCancelledItemToOrder">
         <value xml:lang="ar">البند الملغى لأمر البيع\الشراء</value>
         <value xml:lang="de">Anullierter Artikel der Bestellung:</value>
@@ -3303,6 +3306,9 @@
         <value xml:lang="zh">复制询价</value>
         <value xml:lang="zh-CN">复制询价</value>
         <value xml:lang="zh-TW">複製報價</value>
+    </property>
+    <property key="OrderCreatePlan">
+      <value xml:lang="en">Create Plan</value>
     </property>
     <property key="OrderCreateTestSalesOrderSingleError">
         <value xml:lang="ar">لا يوجد سلع موجودة في الفئة ${productCategoryId}; لن يتم خلق أمر بيع/شراء</value>
@@ -9991,6 +9997,12 @@
         <value xml:lang="vi">Chiếc</value>
         <value xml:lang="zh">个</value>
         <value xml:lang="zh-TW">個</value>
+    </property>
+    <property key="OrderPlanHeader">
+        <value xml:lang="en">Plan Header</value>
+    </property>
+    <property key="OrderPlanItems">
+        <value xml:lang="en">Plan Items</value>
     </property>
     <property key="OrderPlanName">
         <value xml:lang="en">Plan Name</value>

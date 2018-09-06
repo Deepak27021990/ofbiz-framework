@@ -1321,4 +1321,15 @@ under the License.
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
     </service>
+    <service name="createAllocationPlanAndItems" engine="java" auth="true"
+             location="org.apache.ofbiz.order.order.OrderServices" invoke="createAllocationPlanAndItems">
+        <description>Create Allocation Plan And Items</description>
+        <attribute name="productId" type="String" mode="IN"/>
+        <attribute name="planName" type="String" mode="IN" optional="true"/>
+        <attribute name="itemListSize" type="Integer" mode="IN"/>
+        <attribute name="itemOrderIdMap" type="Map" mode="IN" string-map-prefix="ioim_"/>
+        <attribute name="itemOrderItemSeqIdMap" type="Map" mode="IN" string-map-prefix="ioisim_"/>
+        <attribute name="itemAllocatedQuantityMap" type="Map" mode="IN" string-map-prefix="iaqm_"/>
+        <attribute name="planId" type="String" mode="OUT"/>
+    </service>
 </services>
