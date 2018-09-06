@@ -31,10 +31,6 @@ under the License.
                                 <if-has-permission permission="ORDERMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="AllocationPlanTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
-                                <container style="button-bar">
-                                    <link target="CreateAllocationPlan" text="${uiLabelMap.OrderNewAllocationPlan}" style="buttontext"/>
-                                </container>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -85,6 +81,13 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonAllocationPlanDecorator" location="${parameters.commonAllocationPlanDecoratorLocation}">
                     <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="button-bar">
+                                    <link target="CreateAllocationPlan" text="${uiLabelMap.OrderNewAllocationPlan}" style="buttontext"/>
+                                </container>
+                            </widgets>
+                        </section>
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
                                 <include-form name="FindAllocationPlan" location="component://order/widget/ordermgr/AllocationPlanForms.xml"/>
@@ -110,6 +113,13 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonAllocationPlanDecorator" location="${parameters.commonAllocationPlanDecorator}">
                     <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="button-bar">
+                                    <link target="CreateAllocationPlan" text="${uiLabelMap.OrderNewAllocationPlan}" style="buttontext"/>
+                                </container>
+                            </widgets>
+                        </section>
                         <platform-specific>
                             <html><html-template location="component://order/template/order/ViewAllocationPlan.ftl"/></html>
                         </platform-specific>
@@ -136,6 +146,13 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonAllocationPlanDecorator" location="${parameters.commonAllocationPlanDecorator}">
                     <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="button-bar">
+                                    <link target="CreateAllocationPlan" text="${uiLabelMap.OrderNewAllocationPlan}" style="buttontext"/>
+                                </container>
+                            </widgets>
+                        </section>
                         <platform-specific>
                             <html><html-template location="component://common-theme/template/includes/SetMultipleSelectJs.ftl"/></html>
                         </platform-specific>

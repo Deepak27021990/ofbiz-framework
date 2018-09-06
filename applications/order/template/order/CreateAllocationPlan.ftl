@@ -57,7 +57,9 @@ under the License.
               <tr>
                 <td class="label"/>
                 <td>
-                  <input type="submit" value="${uiLabelMap.CommonCreate}"/>
+                  <#if !requestParameters.productId?has_content>
+                    <input type="submit" value="${uiLabelMap.CommonCreate}"/>
+                  </#if>
                 </td>
               </tr>
             </table>
