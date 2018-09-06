@@ -72,7 +72,7 @@ under the License.
             <display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"/>
         </field>
         <field name="allocatedQuantity">
-            <text/>
+            <display/>
         </field>
         <field name="deleteLink" widget-style="buttontext" title=" ">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteAllocationPlanItem">

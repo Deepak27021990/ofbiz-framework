@@ -58,7 +58,7 @@ under the License.
                 <td class="label"/>
                 <td>
                   <#if !requestParameters.productId?has_content>
-                    <input type="submit" value="${uiLabelMap.CommonCreate}"/>
+                    <input type="submit" value="${uiLabelMap.CommonNext}"/>
                   </#if>
                 </td>
               </tr>
