@@ -35,7 +35,6 @@ if (productId) {
                             EntityCondition.makeCondition("planTypeId", EntityOperator.EQUALS, "SALES_ORD_ALLOCATION")],
                         EntityOperator.AND)
     allocationPlanHeader = from("AllocationPlanHeader").where(ecl).queryFirst()
-    println "=============allocationPlanHeader========="+allocationPlanHeader
     if (allocationPlanHeader == null) {
         ecl = EntityCondition.makeCondition([
                                 EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId),
@@ -91,5 +90,4 @@ if (productId) {
 }
 allocationPlanInfo.isPlanAlreadyExists = isPlanAlreadyExists
 allocationPlanInfo.itemList = itemList
-println "============allocationPlanInfo========="+allocationPlanInfo
 context.allocationPlanInfo = allocationPlanInfo
