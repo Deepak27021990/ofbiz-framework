@@ -31,12 +31,12 @@ under the License.
             </drop-down>
         </field>
         <field name="statusId">
-            <check all-checked="false">
+            <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="ALLOC_PLAN_STATUS"/>
                     <entity-order-by field-name="sequenceId"/>
                 </entity-options>
-            </check>
+            </drop-down>
         </field>
         <field name="productId">
             <lookup target-form-name="LookupProduct"/>
