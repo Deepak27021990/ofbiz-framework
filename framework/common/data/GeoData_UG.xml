@@ -1,4 +1,5 @@
-<#--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -16,18 +17,15 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div>
-    <h1>${uiLabelMap.OrderSpecialOffers}</h1>
-    <div>
-        <ul>
-        <#-- show promotions text -->
-        <#list productPromosAllShowable as productPromo>
-            <li><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="button">${uiLabelMap.CommonDetails}</a> ${StringUtil.wrapString(productPromo.promoText!)}</li>
-        </#list>
-        </ul>
-    </div>
-</div>
 
-<#if (shoppingCartSize > 0)>
-  ${screens.render(promoUseDetailsInlineScreen)}
-</#if>
+<entity-engine-xml>
+    <Geo abbreviation="C" geoCode="C" geoId="UG-C" geoName="Central" geoTypeId="REGION"/>
+    <Geo abbreviation="E" geoCode="E" geoId="UG-E" geoName="Eastern" geoTypeId="REGION"/>
+    <Geo abbreviation="N" geoCode="N" geoId="UG-N" geoName="Northern" geoTypeId="REGION"/>
+    <Geo abbreviation="W" geoCode="W" geoId="UG-W" geoName="Western" geoTypeId="REGION"/>
+    
+    <GeoAssoc geoId="UGA" geoIdTo="UG-C" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="UGA" geoIdTo="UG-E" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="UGA" geoIdTo="UG-N" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="UGA" geoIdTo="UG-W" geoAssocTypeId="REGIONS"/>
+</entity-engine-xml>
