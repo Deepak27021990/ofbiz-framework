@@ -88,7 +88,7 @@ under the License.
             <link target="orderstats"/>
         </menu-item>
 
-        <menu-item name="allocationPlan" title="Allocation Plan">
+        <menu-item name="allocationPlan" title="${uiLabelMap.OrderAllocationPlan}">
             <link target="FindAllocationPlan"/>
         </menu-item>
     </menu>

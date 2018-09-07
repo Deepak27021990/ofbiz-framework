@@ -2084,6 +2084,9 @@
     <property key="OrderAllocatedValue">
         <value xml:lang="en">Allocated Value</value>
     </property>
+    <property key="OrderAllocationPlan">
+        <value xml:lang="en">Allocation Plan</value>
+    </property>
     <property key="OrderAllowSolicitation">
         <value xml:lang="ar">السماح بالإستدعاءات</value>
         <value xml:lang="de">(Werbung gestatten?)</value>
