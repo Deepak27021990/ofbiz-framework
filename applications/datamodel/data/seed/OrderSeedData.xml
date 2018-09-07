@@ -386,15 +386,17 @@ under the License.
     <StatusItem description="Completed" sequenceId="03" statusCode="COMPLETED" statusId="ALLOC_PLAN_COMPLETED" statusTypeId="ALLOC_PLAN_STATUS"/>
     <StatusItem description="Cancelled" sequenceId="04" statusCode="CANCELLED" statusId="ALLOC_PLAN_CANCELLED" statusTypeId="ALLOC_PLAN_STATUS"/>
     <StatusItem description="Created" sequenceId="01" statusCode="CREATED" statusId="ALLOC_PLAN_ITEM_CRTD" statusTypeId="ALLOC_PLAN_ITEM_STTS"/>
-    <StatusItem description="Completed" sequenceId="02" statusCode="COMPLETED" statusId="ALLOC_PLAN_ITEM_CMPL" statusTypeId="ALLOC_PLAN_ITEM_STTS"/>
-    <StatusItem description="Cancelled" sequenceId="03" statusCode="CANCELLED" statusId="ALLOC_PLAN_ITEM_CNCL" statusTypeId="ALLOC_PLAN_ITEM_STTS"/>
+    <StatusItem description="Approved" sequenceId="02" statusCode="APPROVED" statusId="ALLOC_PLAN_ITEM_APRV" statusTypeId="ALLOC_PLAN_ITEM_STTS"/>
+    <StatusItem description="Completed" sequenceId="03" statusCode="COMPLETED" statusId="ALLOC_PLAN_ITEM_CMPL" statusTypeId="ALLOC_PLAN_ITEM_STTS"/>
+    <StatusItem description="Cancelled" sequenceId="04" statusCode="CANCELLED" statusId="ALLOC_PLAN_ITEM_CNCL" statusTypeId="ALLOC_PLAN_ITEM_STTS"/>
     <Enumeration description="Auto" enumCode="AUTO" enumId="AUTO" enumTypeId="ALLOC_PLAN_METHOD" sequenceId="01"/>
     <Enumeration description="Manual" enumCode="MANUAL" enumId="MANUAL" enumTypeId="ALLOC_PLAN_METHOD" sequenceId="02"/>
-    <StatusValidChange statusId='ALLOC_PLAN_CREATED' statusIdTo='ALLOC_PLAN_APPROVED' transitionName='Approve' sequenceNum='01' />
-    <StatusValidChange statusId='ALLOC_PLAN_CREATED' statusIdTo='ALLOC_PLAN_CANCELLED' transitionName='Cancel' sequenceNum='02' />
-    <StatusValidChange statusId='ALLOC_PLAN_APPROVED' statusIdTo='ALLOC_PLAN_COMPLETED' transitionName='Complete' sequenceNum='01' />
-    <StatusValidChange statusId='ALLOC_PLAN_APPROVED' statusIdTo='ALLOC_PLAN_CANCELLED' transitionName='Cancel' sequenceNum='02' />
-    <StatusValidChange statusId='ALLOC_PLAN_ITEM_CRTD' statusIdTo='ALLOC_PLAN_ITEM_CMPL' transitionName='Complete' sequenceNum='01' />
-    <StatusValidChange statusId='ALLOC_PLAN_ITEM_CRTD' statusIdTo='ALLOC_PLAN_ITEM_CNCL' transitionName='Cancelled' sequenceNum='02' />
-
+    <StatusValidChange statusId='ALLOC_PLAN_CREATED' statusIdTo='ALLOC_PLAN_APPROVED' transitionName='Approve'/>
+    <StatusValidChange statusId='ALLOC_PLAN_CREATED' statusIdTo='ALLOC_PLAN_CANCELLED' transitionName='Cancel'/>
+    <StatusValidChange statusId='ALLOC_PLAN_APPROVED' statusIdTo='ALLOC_PLAN_COMPLETED' transitionName='Complete'/>
+    <StatusValidChange statusId='ALLOC_PLAN_APPROVED' statusIdTo='ALLOC_PLAN_CANCELLED' transitionName='Cancel'/>
+    <StatusValidChange statusId='ALLOC_PLAN_ITEM_CRTD' statusIdTo='ALLOC_PLAN_ITEM_APRV' transitionName='Approve'/>
+    <StatusValidChange statusId='ALLOC_PLAN_ITEM_CRTD' statusIdTo='ALLOC_PLAN_ITEM_CNCL' transitionName='Cancel'/>
+    <StatusValidChange statusId='ALLOC_PLAN_ITEM_APRV' statusIdTo='ALLOC_PLAN_ITEM_CMPL' transitionName='Complete'/>
+    <StatusValidChange statusId='ALLOC_PLAN_ITEM_APRV' statusIdTo='ALLOC_PLAN_ITEM_CNCL' transitionName='Cancel'/>
 </entity-engine-xml>

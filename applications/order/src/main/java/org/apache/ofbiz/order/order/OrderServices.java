@@ -6569,6 +6569,7 @@ public class OrderServices {
                     planItemSeqId = allocationPlanItem.getString("planItemSeqId");
                     serviceCtx.put("planId", planId);
                     serviceCtx.put("planItemSeqId", planItemSeqId);
+                    serviceCtx.put("productId", productId);
                     serviceCtx.put("planMethodEnumId", planMethodEnumId);
                     if ("AUTO".equals(planMethodEnumId)) {
                         serviceCtx.put("allocatedQuantity", orderItem.getBigDecimal("quantity"));
@@ -6598,6 +6599,48 @@ public class OrderServices {
         return serviceResult;
     }
 
+    public static Map<String, Object> approveAllocationPlanItems(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin  = (GenericValue)context.get("userLogin");
+        String planId = (String) context.get("planId");
+        Map<String, Object> serviceCtx = new HashMap<String, Object>();
+        Map<String, Object> serviceResult = new HashMap<String, Object>();
+        try {
+            String userLoginId = null;
+            if (userLogin != null) {
+                userLoginId = userLogin.getString("userLoginId");
+            }
+            //Get the list of plan items
+            List<EntityCondition> itemConditions = new ArrayList();
+            itemConditions.add(EntityCondition.makeCondition("planId", planId));
+            itemConditions.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ALLOC_PLAN_ITEM_CRTD"));
+            List<GenericValue> allocationPlanItems = EntityQuery.use(delegator).from("AllocationPlanItem").where(itemConditions).queryList();
+
+            for (GenericValue allocationPlanItem : allocationPlanItems) {
+                serviceCtx.put("planId", planId);
+                serviceCtx.put("planItemSeqId", allocationPlanItem.getString("planItemSeqId"));
+                serviceCtx.put("productId", allocationPlanItem.getString("productId"));
+                serviceCtx.put("statusId", "ALLOC_PLAN_ITEM_APRV");
+                serviceCtx.put("lastModifiedByUserLogin", userLoginId);
+                serviceCtx.put("userLogin", userLogin);
+                serviceResult = dispatcher.runSync("updateAllocationPlanItem", serviceCtx);
+                if (ServiceUtil.isError(serviceResult)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                }
+                serviceCtx.clear();
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
+    }
+
     public static Map<String, Object> completeAllocationPlanItems(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -6619,6 +6662,7 @@ public class OrderServices {
             for (GenericValue allocationPlanItem : allocationPlanItems) {
                 serviceCtx.put("planId", planId);
                 serviceCtx.put("planItemSeqId", allocationPlanItem.getString("planItemSeqId"));
+                serviceCtx.put("productId", allocationPlanItem.getString("productId"));
                 serviceCtx.put("statusId", "ALLOC_PLAN_ITEM_CMPL");
                 serviceCtx.put("lastModifiedByUserLogin", userLoginId);
                 serviceCtx.put("userLogin", userLogin);
@@ -6660,6 +6704,7 @@ public class OrderServices {
             for (GenericValue allocationPlanItem : allocationPlanItems) {
                 serviceCtx.put("planId", planId);
                 serviceCtx.put("planItemSeqId", allocationPlanItem.getString("planItemSeqId"));
+                serviceCtx.put("productId", allocationPlanItem.getString("productId"));
                 serviceCtx.put("statusId", "ALLOC_PLAN_ITEM_CNCL");
                 serviceCtx.put("lastModifiedByUserLogin", userLoginId);
                 serviceCtx.put("userLogin", userLogin);
@@ -6731,6 +6776,7 @@ public class OrderServices {
             return ServiceUtil.returnError(e.getMessage());
         }
         serviceResult.clear();
+        serviceResult.put("planId", planId);
         serviceResult.put("oldStatusId", oldStatusId);
         return serviceResult;
     }
@@ -6769,6 +6815,7 @@ public class OrderServices {
             Map<String, Object> serviceCtx = new HashMap<String, Object>();
             serviceCtx.put("planId", planId);
             serviceCtx.put("planItemSeqId", planItemSeqId);
+            serviceCtx.put("productId", allocationPlanItem.getString("productId"));
             serviceCtx.put("statusId", statusId);
             serviceCtx.put("lastModifiedByUserLogin", userLoginId);
             serviceCtx.put("userLogin", userLogin);
@@ -6966,6 +7013,7 @@ public class OrderServices {
                                 Map<String, Object> serviceCtx = new HashMap<String, Object>();
                                 serviceCtx.put("planId", allocationPlanItem.getString("planId"));
                                 serviceCtx.put("planItemSeqId", allocationPlanItem.getString("planItemSeqId"));
+                                serviceCtx.put("productId", allocationPlanItem.getString("productId"));
                                 serviceCtx.put("allocatedQuantity", revisedQuantity);
                                 serviceCtx.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
                                 serviceCtx.put("userLogin", userLogin);

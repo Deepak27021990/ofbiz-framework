@@ -94,6 +94,33 @@ under the License.
   <div class="screenlet-title-bar">
     <ul>
       <li class="h3">${uiLabelMap.OrderOverview} [${uiLabelMap.CommonId}:${allocationPlanInfo.planId!}]</li>
+      <#if allocationPlanInfo.statusId! == "ALLOC_PLAN_CREATED" || allocationPlanInfo.statusId! == "ALLOC_PLAN_APPROVED">
+        <li>
+          <a href="javascript:document.CancelPlan.submit()">Cancel Plan</a>
+          <form class="basic-form" name="CancelPlan" method="post" action="<@ofbizUrl>changeAllocationPlanStatus/orderview</@ofbizUrl>">
+            <input type="hidden" name="planId" value="${allocationPlanInfo.planId!}"/>
+            <input type="hidden" name="statusId" value="ALLOC_PLAN_CANCELLED"/>
+          </form>
+        </li>
+      </#if>
+      <#if allocationPlanInfo.statusId! == "ALLOC_PLAN_APPROVED">
+        <li>
+          <a href="javascript:document.CompletePlan.submit()">Complete Plan</a>
+          <form class="basic-form" name="CompletePlan" method="post" action="<@ofbizUrl>changeAllocationPlanStatus/orderview</@ofbizUrl>">
+            <input type="hidden" name="planId" value="${allocationPlanInfo.planId!}"/>
+            <input type="hidden" name="statusId" value="ALLOC_PLAN_COMPLETED"/>
+          </form>
+        </li>
+      </#if>
+      <#if allocationPlanInfo.statusId! == "ALLOC_PLAN_CREATED">
+        <li>
+          <a href="javascript:document.ApprovePlan.submit()">Approve Plan</a>
+          <form class="basic-form" name="ApprovePlan" method="post" action="<@ofbizUrl>changeAllocationPlanStatus/orderview</@ofbizUrl>">
+            <input type="hidden" name="planId" value="${allocationPlanInfo.planId!}"/>
+            <input type="hidden" name="statusId" value="ALLOC_PLAN_APPROVED"/>
+          </form>
+        </li>
+      </#if>
     </ul>
     <br class="clear"/>
   </div>

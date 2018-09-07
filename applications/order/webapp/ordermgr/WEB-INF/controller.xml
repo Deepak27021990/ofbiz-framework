@@ -1315,6 +1315,16 @@ under the License.
         <response name="success" type="view" value="FindAllocationPlan"/>
         <response name="error" type="view" value="FindAllocationPlan"/>
     </request-map>
+    <request-map uri="changeAllocationPlanStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="changeAllocationPlanStatus"/>
+        <response name="success" type="request-redirect" value="ViewAllocationPlan">
+            <redirect-parameter name="planId"/>
+        </response>
+        <response name="error" type="request-redirect" value="ViewAllocationPlan">
+            <redirect-parameter name="planId"/>
+        </response>
+    </request-map>
 
     <!-- =============== CustRequest mapping =================-->
     <request-map uri="FindRequest"><security https="true" auth="true"/><response name="success" type="view" value="FindRequest"/></request-map>

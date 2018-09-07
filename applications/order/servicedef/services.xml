@@ -1278,6 +1278,11 @@ under the License.
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="productPlanMap" mode="OUT" type="Map" optional="true"/>
     </service>
+    <service name="approveAllocationPlanItems" engine="java" auth="true"
+            location="org.apache.ofbiz.order.order.OrderServices" invoke="approveAllocationPlanItems">
+        <description>Mark all the items of an allocation plan as approve</description>
+        <attribute name="planId" type="String" mode="IN"/>
+    </service>
     <service name="completeAllocationPlanItems" engine="java" auth="true"
             location="org.apache.ofbiz.order.order.OrderServices" invoke="completeAllocationPlanItems">
         <description>Mark all the items of an allocation plan as complete</description>
@@ -1285,13 +1290,13 @@ under the License.
     </service>
     <service name="cancelAllocationPlanItems" engine="java" auth="true"
             location="org.apache.ofbiz.order.order.OrderServices" invoke="cancelAllocationPlanItems">
-        <description>Mark all the items of an allocation plan as complete</description>
+        <description>Mark all the items of an allocation plan as cancel</description>
         <attribute name="planId" type="String" mode="IN"/>
     </service>
     <service name="changeAllocationPlanStatus" engine="java" auth="true"
             location="org.apache.ofbiz.order.order.OrderServices" invoke="changeAllocationPlanStatus">
         <description>Change Allocation Plan Status</description>
-        <attribute name="planId" type="String" mode="IN"/>
+        <attribute name="planId" type="String" mode="INOUT"/>
         <attribute name="statusId" type="String" mode="IN"/>
         <attribute name="oldStatusId" type="String" mode="OUT"/>
     </service>
