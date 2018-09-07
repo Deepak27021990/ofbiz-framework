@@ -16,6 +16,22 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#if !requestParameters.productId?has_content && requestParameters.editMode! == "N">
+  <div class="alert alert-light" role="alert">
+    Please enter product id.
+  </div>
+</#if>
+<#if allocationPlanInfo.isPlanAlreadyExists>
+  <div class="alert alert-light" role="alert">
+    Allocation Plan Already Exists.
+  </div>
+</#if>
+<#if requestParameters.productId?has_content && (allocationPlanInfo.itemList.size() == 0)>
+  <div class="alert alert-light" role="alert">
+    ${uiLabelMap.OrderNoOrderFound}
+  </div>
+</#if>
+
 <#if requestParameters.editMode?exists>
   <#assign editMode=parameters.editMode>
 <#else>
@@ -57,7 +73,7 @@ under the License.
               <tr>
                 <td class="label"/>
                 <td>
-                  <#if !requestParameters.productId?has_content>
+                  <#if !requestParameters.productId?has_content || allocationPlanInfo.itemList.size() == 0 || allocationPlanInfo.isPlanAlreadyExists>
                     <input type="submit" value="${uiLabelMap.CommonNext}"/>
                   </#if>
                 </td>
@@ -68,7 +84,7 @@ under the License.
       </table>
     </div>
   </div>
-  <#if requestParameters.productId?has_content>
+  <#if requestParameters.productId?has_content && allocationPlanInfo.itemList.size() &gt; 0 && !allocationPlanInfo.isPlanAlreadyExists>
     <div class="screenlet">
       <div class="screenlet-title-bar">
         <ul>
@@ -100,37 +116,31 @@ under the License.
             </#if>
           </tr>
           <input type="hidden" name="itemListSize" value="${allocationPlanInfo.itemList.size()}"/>
-          <#if (allocationPlanInfo.itemList.size() > 0)>
-            <#list allocationPlanInfo.itemList as item>
-              <tr>
-                <input type="hidden" name="ioim_${item_index}" value="${item.orderId}"/>
-                <input type="hidden" name="ioisim_${item_index}" value="${item.orderItemSeqId}"/>
-                <input type="hidden" name="ipsim_${item_index}" value="${item_index+1}"/>
-                <td>${item.salesChannel!}</td>
-                <td><a href="/partymgr/control/viewprofile?partyId=${item.partyId!}" title="${item.partyId!}">${item.partyName!}</a></td>
-                <td><a href="/ordermgr/control/orderview?orderId=${item.orderId!}" title="${item.orderId!}">${item.orderId!}</a></td>
-                <td>${item.orderItemSeqId!}</td>
-                <td>${item.estimatedShipDate!}</td>
-                <td align="right">${item.orderedQuantity!}</td>
-                <td align="right">${item.reservedQuantity!}</td>
-                <td align="right">${item.orderedValue!}</td>
-                <#if editMode=="Y">
-                  <td><input type="text" name="iaqm_${item_index}" value="${item.allocatedQuantity!}"></td>
-                  <td align="right">
-                    <a href="#" class="up"><img src="/images/arrow-single-up-green.png"/></a>
-                    <a href="#" class="down"><img src="/images/arrow-single-down-green.png"/></a>
-                  </td>
-                <#else>
-                  <td align="right">${item.allocatedQuantity!}</td>
-                  <input type="hidden" name="iaqm_${item_index}" value="${item.allocatedQuantity!}"/>
-                </#if>
-              </tr>
-            </#list>
-          <#else>
+          <#list allocationPlanInfo.itemList as item>
             <tr>
-              <td colspan="9">${uiLabelMap.OrderNoOrderFound}</td>
+              <input type="hidden" name="ioim_${item_index}" value="${item.orderId}"/>
+              <input type="hidden" name="ioisim_${item_index}" value="${item.orderItemSeqId}"/>
+              <input type="hidden" name="ipsim_${item_index}" value="${item_index+1}"/>
+              <td>${item.salesChannel!}</td>
+              <td><a href="/partymgr/control/viewprofile?partyId=${item.partyId!}" title="${item.partyId!}">${item.partyName!}</a></td>
+              <td><a href="/ordermgr/control/orderview?orderId=${item.orderId!}" title="${item.orderId!}">${item.orderId!}</a></td>
+              <td>${item.orderItemSeqId!}</td>
+              <td>${item.estimatedShipDate!}</td>
+              <td align="right">${item.orderedQuantity!}</td>
+              <td align="right">${item.reservedQuantity!}</td>
+              <td align="right">${item.orderedValue!}</td>
+              <#if editMode=="Y">
+                <td><input type="text" name="iaqm_${item_index}" value="${item.allocatedQuantity!}"></td>
+                <td align="right">
+                  <a href="#" class="up"><img src="/images/arrow-single-up-green.png"/></a>
+                  <a href="#" class="down"><img src="/images/arrow-single-down-green.png"/></a>
+                </td>
+              <#else>
+                <td align="right">${item.allocatedQuantity!}</td>
+                <input type="hidden" name="iaqm_${item_index}" value="${item.allocatedQuantity!}"/>
+              </#if>
             </tr>
-          </#if>
+          </#list>
         </table>
       </div>
     </div>

@@ -24,58 +24,72 @@ import org.apache.ofbiz.party.party.PartyHelper
 
 allocationPlanInfo = [:]
 itemList = []
+isPlanAlreadyExists = false
 productId = parameters.productId
 planName = parameters.planName
 
 if (productId) {
     ecl = EntityCondition.makeCondition([
                             EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId),
-                            EntityCondition.makeCondition("orderStatusId", EntityOperator.EQUALS, "ORDER_APPROVED"),
-                            EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER")],
+                            EntityCondition.makeCondition("statusId", EntityOperator.IN, ["ALLOC_PLAN_CREATED", "ALLOC_PLAN_APPROVED"]),
+                            EntityCondition.makeCondition("planTypeId", EntityOperator.EQUALS, "SALES_ORD_ALLOCATION")],
                         EntityOperator.AND)
-    orderAndItemList = from("OrderHeaderAndItems").where(ecl).queryList()
-    orderAndItemList.each { orderAndItem ->
-        itemMap = [:]
-        salesChannelEnumId = orderAndItem.salesChannelEnumId
-        itemMap.salesChannelEnumId = salesChannelEnumId
-        salesChannel = from("Enumeration").where("enumId", salesChannelEnumId).queryOne()
-        if (salesChannel) {
-            itemMap.salesChannel = salesChannel.description
-        }
-
-        orh = new OrderReadHelper(delegator, orderAndItem.orderId)
-        placingParty = orh.getPlacingParty()
-        if (placingParty != null) {
-            itemMap.partyId = placingParty.partyId
-            itemMap.partyName = PartyHelper.getPartyName(placingParty)
-        }
-
-        itemMap.orderId = orderAndItem.orderId
-        itemMap.orderItemSeqId = orderAndItem.orderItemSeqId
-        itemMap.estimatedShipDate = orderAndItem.estimatedShipDate
-
-        unitPrice = orderAndItem.unitPrice
-        cancelQuantity = orderAndItem.cancelQuantity
-        quantity = orderAndItem.quantity
-        if (cancelQuantity != null) {
-            orderedQuantity = quantity.subtract(cancelQuantity)
-        } else {
-            orderedQuantity = quantity
-        }
-        itemMap.orderedQuantity = orderedQuantity
-        itemMap.orderedValue = orderedQuantity.multiply(unitPrice)
-
-        // Reserved quantity
-        reservedQuantity = 0.0
-        reservations = from("OrderItemShipGrpInvRes").where("orderId", orderAndItem.orderId, "orderItemSeqId", orderAndItem.orderItemSeqId).queryList()
-        reservations.each { reservation ->
-            if (reservation.quantity) {
-                reservedQuantity += reservation.quantity
+    allocationPlanHeader = from("AllocationPlanHeader").where(ecl).queryFirst()
+    println "=============allocationPlanHeader========="+allocationPlanHeader
+    if (allocationPlanHeader == null) {
+        ecl = EntityCondition.makeCondition([
+                                EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId),
+                                EntityCondition.makeCondition("orderStatusId", EntityOperator.EQUALS, "ORDER_APPROVED"),
+                                EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER")],
+                            EntityOperator.AND)
+        orderAndItemList = from("OrderHeaderAndItems").where(ecl).queryList()
+        orderAndItemList.each { orderAndItem ->
+            itemMap = [:]
+            salesChannelEnumId = orderAndItem.salesChannelEnumId
+            itemMap.salesChannelEnumId = salesChannelEnumId
+            salesChannel = from("Enumeration").where("enumId", salesChannelEnumId).queryOne()
+            if (salesChannel) {
+                itemMap.salesChannel = salesChannel.description
             }
+
+            orh = new OrderReadHelper(delegator, orderAndItem.orderId)
+            placingParty = orh.getPlacingParty()
+            if (placingParty != null) {
+                itemMap.partyId = placingParty.partyId
+                itemMap.partyName = PartyHelper.getPartyName(placingParty)
+            }
+
+            itemMap.orderId = orderAndItem.orderId
+            itemMap.orderItemSeqId = orderAndItem.orderItemSeqId
+            itemMap.estimatedShipDate = orderAndItem.estimatedShipDate
+
+            unitPrice = orderAndItem.unitPrice
+            cancelQuantity = orderAndItem.cancelQuantity
+            quantity = orderAndItem.quantity
+            if (cancelQuantity != null) {
+                orderedQuantity = quantity.subtract(cancelQuantity)
+            } else {
+                orderedQuantity = quantity
+            }
+            itemMap.orderedQuantity = orderedQuantity
+            itemMap.orderedValue = orderedQuantity.multiply(unitPrice)
+
+            // Reserved quantity
+            reservedQuantity = 0.0
+            reservations = from("OrderItemShipGrpInvRes").where("orderId", orderAndItem.orderId, "orderItemSeqId", orderAndItem.orderItemSeqId).queryList()
+            reservations.each { reservation ->
+                if (reservation.quantity) {
+                    reservedQuantity += reservation.quantity
+                }
+            }
+            itemMap.reservedQuantity = reservedQuantity
+            itemList.add(itemMap)
         }
-        itemMap.reservedQuantity = reservedQuantity
-        itemList.add(itemMap)
+    } else {
+        isPlanAlreadyExists = true
     }
 }
+allocationPlanInfo.isPlanAlreadyExists = isPlanAlreadyExists
 allocationPlanInfo.itemList = itemList
+println "============allocationPlanInfo========="+allocationPlanInfo
 context.allocationPlanInfo = allocationPlanInfo
