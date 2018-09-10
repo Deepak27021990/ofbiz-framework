@@ -48,9 +48,10 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-    <form name="ListAllocationPlan" type="list" target="" title="" list-name="allocationPlans" paginate-target="FindAllocationPlan"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="planId" widget-style="buttontext">
+
+    <grid name="ListAllocationPlan" list-name="allocationPlans" target="" title="" paginate-target="FindAllocationPlan"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" header-row-style="header-row-2">
+        <field name="planId" widget-style="buttontext" sort-field="true">
             <hyperlink target-type="inter-app" description="${planId}" target="/ordermgr/control/ViewAllocationPlan">
                 <parameter param-name="planId"/>
             </hyperlink>
@@ -59,10 +60,10 @@ under the License.
         <field name="planTypeId">
             <display-entity entity-name="AllocationPlanType"/>
         </field>
-        <field name="productId">
+        <field name="productId" sort-field="true">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
         </field>
-        <field name="orderId">
+        <field name="orderId" sort-field="true">
             <display-entity entity-name="OrderHeader" key-field-name="orderId" description="${orderId}"/>
         </field>
         <field name="orderItemSeqId">
@@ -71,7 +72,7 @@ under the License.
         <field name="planMethodEnumId">
             <display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"/>
         </field>
-        <field name="allocatedQuantity">
+        <field name="allocatedQuantity" sort-field="true">
             <display/>
         </field>
         <field name="deleteLink" widget-style="buttontext" title=" ">
@@ -81,5 +82,5 @@ under the License.
                 <parameter param-name="productId"/>
             </hyperlink>
         </field>
-    </form>
+    </grid>
 </forms>

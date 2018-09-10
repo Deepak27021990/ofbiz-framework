@@ -25,6 +25,7 @@ planTypeId = parameters.planTypeId
 statusId = parameters.statusId
 productId = parameters.productId
 orderId = parameters.orderId
+sortField = parameters.sortField
 
 List exprs = []
 if (planId) {
@@ -50,7 +51,13 @@ if (orderId) {
     exprs.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId))
 }
 ecl = EntityCondition.makeCondition(exprs, EntityOperator.OR)
-allocationPlanItems = from("AllocationPlanAndItem").where(ecl).queryList()
+
+if (sortField) {
+    allocationPlanItems = from("AllocationPlanAndItem").where(ecl).orderBy(sortField).queryList()
+} else {
+    allocationPlanItems = from("AllocationPlanAndItem").where(ecl).queryList()
+}
+
 allocationPlans = []
 allocationPlanItems.each { allocationPlanItem ->
     allocationPlanMap = [:]
