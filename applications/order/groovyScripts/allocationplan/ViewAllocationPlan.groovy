@@ -125,11 +125,17 @@ if (allocationPlanHeader) {
                 existingSummaryMap.orderedUnits += newSummaryMap.orderedUnits
                 existingSummaryMap.orderedValue += newSummaryMap.orderedValue
                 if (existingSummaryMap.allocatedUnits) {
+                    if (!newSummaryMap.allocatedUnits) {
+                        newSummaryMap.allocatedUnits = 0
+                    }
                     existingSummaryMap.allocatedUnits += newSummaryMap.allocatedUnits
                 } else {
                     existingSummaryMap.allocatedUnits = newSummaryMap.allocatedUnits
                 }
                 if (existingSummaryMap.allocatedValue) {
+                    if (!newSummaryMap.allocatedValue) {
+                        newSummaryMap.allocatedValue = 0
+                    }
                     existingSummaryMap.allocatedValue += newSummaryMap.allocatedValue
                 } else {
                     existingSummaryMap.allocatedValue = newSummaryMap.allocatedValue
