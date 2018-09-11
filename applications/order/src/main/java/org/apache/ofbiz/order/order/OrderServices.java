@@ -7109,4 +7109,51 @@ public class OrderServices {
         serviceResult.put("planId", planId);
         return serviceResult;
     }
+
+    public static Map<String, Object> reserveOrderInventoryByAllocationPlan(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin  = (GenericValue)context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
+        String planId = (String) context.get("planId");
+        try {
+            List<EntityExpr> exprs = new ArrayList<>();
+            exprs.add(EntityCondition.makeCondition("planId", planId));
+            exprs.add(EntityCondition.makeCondition("planItemStatusId", "ALLOC_PLAN_ITEM_CMPL"));
+            List<GenericValue> allocationPlanAndItems = EntityQuery.use(delegator).from("AllocationPlanAndItem").where(exprs).orderBy("prioritySeqId").queryList();
+            for (GenericValue allocationPlanAndItem : allocationPlanAndItems) {
+                BigDecimal allocatedQuantity = allocationPlanAndItem.getBigDecimal("allocatedQuantity");
+                if (allocatedQuantity != null) {
+                    String orderId = allocationPlanAndItem.getString("orderId");
+                    String orderItemSeqId = allocationPlanAndItem.getString("orderItemSeqId");
+                    String productId = allocationPlanAndItem.getString("productId");
+                    OrderReadHelper orh = new OrderReadHelper(delegator, orderId);
+
+                    String shipGroupSeqId = null;
+                    GenericValue orderItemShipGroup = EntityQuery.use(delegator).from("OrderItemShipGroup").where("orderId", orderId).queryFirst();
+                    if (orderItemShipGroup != null) {
+                        shipGroupSeqId = orderItemShipGroup.getString("shipGroupSeqId");
+                    }
+
+                    Map<String, Object> serviceCtx = new HashMap<>();
+                    serviceCtx.put("productStoreId", orh.getProductStoreId());
+                    serviceCtx.put("productId", productId);
+                    serviceCtx.put("orderId", orderId);
+                    serviceCtx.put("orderItemSeqId", orderItemSeqId);
+                    serviceCtx.put("shipGroupSeqId", shipGroupSeqId);
+                    serviceCtx.put("quantity", allocatedQuantity);
+                    serviceCtx.put("userLogin", userLogin);
+                    Map<String, Object> serviceResult = dispatcher.runSync("reserveStoreInventory", serviceCtx);
+                    if (ServiceUtil.isError(serviceResult)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                    }
+                }
+            }
+        } catch (GenericEntityException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        } catch (GenericServiceException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
+    }
 }

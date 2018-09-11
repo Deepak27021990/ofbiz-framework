@@ -3065,6 +3065,7 @@ under the License.
         <alias entity-alias="APH" name="planTypeId"/>
         <alias entity-alias="APH" name="productId"/>
         <alias entity-alias="API" name="planItemSeqId"/>
+        <alias entity-alias="API" name="planItemStatusId" field="statusId"/>
         <alias entity-alias="API" name="orderId"/>
         <alias entity-alias="API" name="orderItemSeqId"/>
         <alias entity-alias="API" name="planMethodEnumId"/>
