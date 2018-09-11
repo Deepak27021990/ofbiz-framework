@@ -63,8 +63,8 @@ under the License.
         <field name="productId" sort-field="true">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
         </field>
-        <field name="orderId" sort-field="true">
-            <display-entity entity-name="OrderHeader" key-field-name="orderId" description="${orderId}"/>
+        <field name="orderId" sort-field="true" >
+            <display/>
         </field>
         <field name="orderItemSeqId">
             <display/>
