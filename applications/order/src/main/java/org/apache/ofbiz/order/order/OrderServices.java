@@ -7135,13 +7135,29 @@ public class OrderServices {
                         shipGroupSeqId = orderItemShipGroup.getString("shipGroupSeqId");
                     }
 
+                    // Get already reserved quantity
+                    BigDecimal reservedQuantity = BigDecimal.ZERO;
+                    List<GenericValue> orderItemShipGrpInvResList = EntityQuery.use(delegator).from("OrderItemShipGrpInvRes").where("orderId", orderId, "orderItemSeqId", orderItemSeqId, "shipGroupSeqId", shipGroupSeqId).queryList();
+                    for (GenericValue orderItemShipGrpInvRes : orderItemShipGrpInvResList) {
+                        BigDecimal quantityAvailable = orderItemShipGrpInvRes.getBigDecimal("quantity");
+                        if (quantityAvailable == null) {
+                            quantityAvailable = BigDecimal.ZERO;
+                        }
+                        BigDecimal quantityNotAvailable = orderItemShipGrpInvRes.getBigDecimal("quantityNotAvailable");
+                        if (quantityNotAvailable == null) {
+                            quantityNotAvailable = BigDecimal.ZERO;
+                        }
+                        reservedQuantity = reservedQuantity.add(quantityAvailable.subtract(quantityNotAvailable));
+                    }
+                    BigDecimal toBeReservedQuantity = allocatedQuantity.subtract(reservedQuantity);
+
                     Map<String, Object> serviceCtx = new HashMap<>();
                     serviceCtx.put("productStoreId", orh.getProductStoreId());
                     serviceCtx.put("productId", productId);
                     serviceCtx.put("orderId", orderId);
                     serviceCtx.put("orderItemSeqId", orderItemSeqId);
                     serviceCtx.put("shipGroupSeqId", shipGroupSeqId);
-                    serviceCtx.put("quantity", allocatedQuantity);
+                    serviceCtx.put("quantity", toBeReservedQuantity);
                     serviceCtx.put("userLogin", userLogin);
                     Map<String, Object> serviceResult = dispatcher.runSync("reserveStoreInventory", serviceCtx);
                     if (ServiceUtil.isError(serviceResult)) {
