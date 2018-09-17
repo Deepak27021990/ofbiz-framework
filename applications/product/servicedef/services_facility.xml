@@ -430,8 +430,8 @@ under the License.
         <attribute name="noLongerOnBackOrderIdSet" type="Set" mode="OUT" optional="true"/>
         <attribute name="priority" type="String" mode="IN"  optional="true"/>
     </service>
-    <service name="reassignInventoryReservations2" engine="simple" transaction-timeout="600"
-            location="component://product/minilang/product/inventory/InventoryServices.xml" invoke="reassignInventoryReservations2" auth="true">
+    <service name="reassignInventoryReservationsByAllocationPlan" engine="simple" transaction-timeout="600"
+            location="component://product/minilang/product/inventory/InventoryServices.xml" invoke="reassignInventoryReservationsByAllocationPlan" auth="true">
         <description>Balance inventory reservations for a given product/facility, considering all the reservations with promised date greater than fromDate.</description>
         <attribute name="productId" type="String" mode="IN" optional="false">
         <type-validate>
@@ -446,6 +446,7 @@ under the License.
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="noLongerOnBackOrderIdSet" type="Set" mode="OUT" optional="true"/>
         <attribute name="priority" type="String" mode="IN"  optional="true"/>
+        <attribute name="allocationPlanAndItemList" mode="IN" type="List"/>
     </service>
     <service name="balanceOrderItemsWithNegativeReservations" engine="simple"
                 location="component://product/minilang/product/inventory/InventoryServices.xml" invoke="balanceOrderItemsWithNegativeReservations">
