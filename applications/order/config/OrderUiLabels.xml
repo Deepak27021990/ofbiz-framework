@@ -2261,6 +2261,9 @@
         <value xml:lang="en">Approve Item</value>
         <value xml:lang="nl">Bevestig item</value>
     </property>
+    <property key="OrderApprovePlan">
+        <value xml:lang="en">Approve Plan</value>
+    </property>
     <property key="OrderApproveOrder">
         <value xml:lang="ar">الموافقة على أمر البيع\الشراء</value>
         <value xml:lang="de">Auftrag bestätigen</value>
@@ -2675,6 +2678,9 @@
         <value xml:lang="zh">已取消明细到订单</value>
         <value xml:lang="zh-TW">已取消細項到訂單:</value>
     </property>
+    <property key="OrderCancelPlan">
+        <value xml:lang="en">Cancel Plan</value>
+    </property>
     <property key="OrderCancelOrder">
         <value xml:lang="ar">إلغاء أمر البيع\الشراء</value>
         <value xml:lang="de">Auftrag stornieren</value>
@@ -2789,6 +2795,9 @@
         <value xml:lang="vi">Bạn không thể thay đổi số lượng hạng mục khuyến mãi ${productName} (ID sản phẩm: ${productId} theo chính sách</value>
         <value xml:lang="zh">对不起，你不能修改促销明细${productName}的数量(产品标识：${productId}，没有设置数量。)</value>
         <value xml:lang="zh-TW">對不起,你不能修改促銷細項${productName}的數量(產品識別:${productId},沒有設定數量.)</value>
+    </property>
+    <property key="OrderCannotCompleteAllocationPlan">
+        <value xml:lang="en">Cannot complete allocation plan, allocated quantity is less than ordered quantity.</value>
     </property>
     <property key="OrderCaptureService">
         <value xml:lang="de">Abbuchungsservice</value>
@@ -3142,6 +3151,9 @@
         <value xml:lang="zh">开源软件OFBiz家族的一部分</value>
         <value xml:lang="zh-CN">OFBiz的一部分</value>
         <value xml:lang="zh-TW">開源軟體OFBiz家族的一部分</value>
+    </property>
+    <property key="OrderCompletePlan">
+        <value xml:lang="en">Complete Plan</value>
     </property>
     <property key="OrderCompleteOrder">
         <value xml:lang="ar">إكمال أمر البيع\الشراء</value>

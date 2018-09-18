@@ -96,7 +96,7 @@ under the License.
       <li class="h3">${uiLabelMap.OrderOverview} [${uiLabelMap.CommonId}:${allocationPlanInfo.planId!}]</li>
       <#if allocationPlanInfo.statusId! == "ALLOC_PLAN_CREATED" || allocationPlanInfo.statusId! == "ALLOC_PLAN_APPROVED">
         <li>
-          <a href="javascript:document.CancelPlan.submit()">Cancel Plan</a>
+          <a href="javascript:document.CancelPlan.submit()">${uiLabelMap.OrderCancelPlan}</a>
           <form class="basic-form" name="CancelPlan" method="post" action="<@ofbizUrl>changeAllocationPlanStatus/orderview</@ofbizUrl>">
             <input type="hidden" name="planId" value="${allocationPlanInfo.planId!}"/>
             <input type="hidden" name="statusId" value="ALLOC_PLAN_CANCELLED"/>
@@ -105,16 +105,20 @@ under the License.
       </#if>
       <#if allocationPlanInfo.statusId! == "ALLOC_PLAN_APPROVED">
         <li>
-          <a href="javascript:document.CompletePlan.submit()">Complete Plan</a>
-          <form class="basic-form" name="CompletePlan" method="post" action="<@ofbizUrl>changeAllocationPlanStatus/orderview</@ofbizUrl>">
-            <input type="hidden" name="planId" value="${allocationPlanInfo.planId!}"/>
-            <input type="hidden" name="statusId" value="ALLOC_PLAN_COMPLETED"/>
-          </form>
+          <#if allocationPlanInfo.orderedQuantityTotal == allocationPlanInfo.allocatedQuantityTotal>
+            <a href="javascript:document.CompletePlan.submit()">${uiLabelMap.OrderCompletePlan}</a>
+            <form class="basic-form" name="CompletePlan" method="post" action="<@ofbizUrl>changeAllocationPlanStatus/orderview</@ofbizUrl>">
+              <input type="hidden" name="planId" value="${allocationPlanInfo.planId!}"/>
+              <input type="hidden" name="statusId" value="ALLOC_PLAN_COMPLETED"/>
+            </form>
+          <#else>
+            <label title="${uiLabelMap.OrderCannotCompleteAllocationPlan}">${uiLabelMap.OrderCompletePlan}</lable>
+          </#if>
         </li>
       </#if>
       <#if allocationPlanInfo.statusId! == "ALLOC_PLAN_CREATED">
         <li>
-          <a href="javascript:document.ApprovePlan.submit()">Approve Plan</a>
+          <a href="javascript:document.ApprovePlan.submit()">${uiLabelMap.OrderApprovePlan}</a>
           <form class="basic-form" name="ApprovePlan" method="post" action="<@ofbizUrl>changeAllocationPlanStatus/orderview</@ofbizUrl>">
             <input type="hidden" name="planId" value="${allocationPlanInfo.planId!}"/>
             <input type="hidden" name="statusId" value="ALLOC_PLAN_APPROVED"/>
