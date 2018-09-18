@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import java.math.RoundingMode
 
 import org.apache.ofbiz.entity.condition.EntityOperator
 import org.apache.ofbiz.entity.condition.EntityCondition
@@ -87,6 +88,7 @@ if (allocationPlanHeader) {
 
             orderItem = from("OrderItem").where("orderId", orderId, "orderItemSeqId", orderItemSeqId).queryOne()
             unitPrice = 0
+            orderedQuantity = 0
             if (orderItem) {
                 unitPrice = orderItem.unitPrice
                 cancelQuantity = orderItem.cancelQuantity
@@ -102,7 +104,7 @@ if (allocationPlanHeader) {
                 newSummaryMap.orderedValue = orderedQuantity.multiply(unitPrice)
 
                 // Reserved quantity
-                reservedQuantity = 0.0
+                reservedQuantity = 0
                 reservations = orderItem.getRelated("OrderItemShipGrpInvRes", null, null, false)
                 reservations.each { reservation ->
                     quantityAvailable = reservation.quantity?reservation.quantity:0.0
@@ -120,6 +122,14 @@ if (allocationPlanHeader) {
                 newSummaryMap.allocatedUnits = allocatedQuantity
                 newSummaryMap.allocatedValue = allocatedQuantity.multiply(unitPrice)
             }
+
+            allocationPercentage = 0.0
+            if (allocatedQuantity && allocatedQuantity != 0 && orderedQuantity != 0) {
+                allocationPercentage = (allocatedQuantity.divide(orderedQuantity, 2, RoundingMode.HALF_UP)).multiply(100)
+            }
+            itemMap.allocationPercentage = allocationPercentage
+            newSummaryMap.allocationPercentage = allocationPercentage
+
             if (summaryMap.containsKey(salesChannelEnumId)) {
                 existingSummaryMap = summaryMap.get(salesChannelEnumId)
                 existingSummaryMap.orderedUnits += newSummaryMap.orderedUnits
@@ -140,6 +150,11 @@ if (allocationPlanHeader) {
                 } else {
                     existingSummaryMap.allocatedValue = newSummaryMap.allocatedValue
                 }
+                allocationPercentage = 0.0
+                if (existingSummaryMap.orderedUnits && existingSummaryMap.orderedUnits != 0 && existingSummaryMap.allocatedUnits && existingSummaryMap.allocatedUnits != 0) {
+                    allocationPercentage = (existingSummaryMap.allocatedUnits.divide(existingSummaryMap.orderedUnits, 2, RoundingMode.HALF_UP)).multiply(100)
+                }
+                existingSummaryMap.allocationPercentage = allocationPercentage
                 summaryMap.put(salesChannelEnumId, existingSummaryMap)
             } else {
                 summaryMap.put(salesChannelEnumId, newSummaryMap)

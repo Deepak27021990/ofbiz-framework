@@ -159,10 +159,11 @@ under the License.
       <table class="basic-table hover-bar" cellspacing='0'>
         <tr class="header-row">
           <td width="20%">${uiLabelMap.OrderOrderingChannel}</td>
-          <td align="right" width="20%">${uiLabelMap.OrderOrderedUnits}</td>
-          <td align="right" width="20%">${uiLabelMap.OrderOrderedValue}</td>
-          <td align="right" width="20%">${uiLabelMap.OrderAllocatedUnits}</td>
-          <td align="right" width="20%">${uiLabelMap.OrderAllocatedValue}</td>
+          <td align="right" width="16%">${uiLabelMap.OrderOrderedUnits}</td>
+          <td align="right" width="16%">${uiLabelMap.OrderOrderedValue}</td>
+          <td align="right" width="16%">${uiLabelMap.OrderAllocatedUnits}</td>
+          <td align="right" width="16%">${uiLabelMap.OrderAllocatedValue}</td>
+          <td align="right" width="16%">${uiLabelMap.OrderAllocation} %</td>
         </tr>
         <#list allocationPlanInfo.summaryMap.keySet() as key>
           <#assign summary = allocationPlanInfo.summaryMap.get(key)/>
@@ -172,6 +173,7 @@ under the License.
             <td align="right">${summary.orderedValue!}</td>
             <td align="right">${summary.allocatedUnits!}</td>
             <td align="right">${summary.allocatedValue!}</td>
+            <td align="right">${summary.allocationPercentage!}</td>
           </tr>
         </#list>
       </table>
@@ -200,15 +202,16 @@ under the License.
           <#if editMode>
             <td width="5%"><input type="checkbox" id="checkAllItems" name="checkAllItems" onchange="javascript:toggleAllItems(this);"></td>
           </#if>
-          <td width="10%">${uiLabelMap.OrderSalesChannel}</td>
-          <td width="10%">${uiLabelMap.OrderCustomer}</td>
-          <td width="10%">${uiLabelMap.FormFieldTitle_orderId}</td>
-          <td width="10%">${uiLabelMap.FormFieldTitle_orderItemSeqId}</td>
-          <td width="10%">${uiLabelMap.FormFieldTitle_estimatedShipDate}</td>
-          <td align="right" width="10%">${uiLabelMap.OrderOrdered}</td>
-          <td align="right" width="10%">${uiLabelMap.ProductReserved}</td>
-          <td align="right" width="10%">${uiLabelMap.OrderExtValue}</td>
-          <td align="right" width="10%">${uiLabelMap.OrderAllocated}</td>
+          <td width="9%">${uiLabelMap.OrderSalesChannel}</td>
+          <td width="9%">${uiLabelMap.OrderCustomer}</td>
+          <td width="9%">${uiLabelMap.FormFieldTitle_orderId}</td>
+          <td width="9%">${uiLabelMap.FormFieldTitle_orderItemSeqId}</td>
+          <td width="9%">${uiLabelMap.FormFieldTitle_estimatedShipDate}</td>
+          <td align="right" width="9%">${uiLabelMap.OrderOrdered}</td>
+          <td align="right" width="9%">${uiLabelMap.ProductReserved}</td>
+          <td align="right" width="9%">${uiLabelMap.OrderExtValue}</td>
+          <td align="right" width="9%">${uiLabelMap.OrderAllocated}</td>
+          <td align="right" width="9%">${uiLabelMap.OrderAllocation} %</td>
           <#if editMode>
             <td align="right" width="5%">${uiLabelMap.FormFieldTitle_actionEnumId}</td>
           </#if>
@@ -234,12 +237,14 @@ under the License.
             <td align="right">${item.orderedValue!}</td>
             <#if editMode>
               <td><input type="text" name="allocatedQuantity_o_${rowCount}" value="${item.allocatedUnits!}"></td>
+              <td align="right">${item.allocationPercentage!}</td>
               <td align="right">
                 <a href="#" class="up"><img src="/images/arrow-single-up-green.png"/></a>
                 <a href="#" class="down"><img src="/images/arrow-single-down-green.png"/></a>
               </td>
             <#else>
               <td align="right">${item.allocatedUnits!}</td>
+              <td align="right">${item.allocationPercentage!}</td>
             </#if>
           </tr>
           <#assign rowCount = rowCount + 1>
