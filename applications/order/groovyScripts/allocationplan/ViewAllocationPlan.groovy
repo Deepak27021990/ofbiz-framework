@@ -57,10 +57,10 @@ if (allocationPlanHeader) {
 
     summaryMap = [:]
     itemList = []
-    orderedUnitsTotal = 0.0
+    orderedQuantityTotal = 0.0
     orderedValueTotal = 0.0
-    reservedUnitsTotal = 0.0
-    allocatedUnitsTotal = 0.0
+    reservedQuantityTotal = 0.0
+    allocatedQuantityTotal = 0.0
     allocatedValueTotal = 0.0
 
     allocationPlanItems = from("AllocationPlanAndItem").where("planId", planId, "productId", allocationPlanInfo.productId).orderBy("prioritySeqId").queryList()
@@ -103,11 +103,11 @@ if (allocationPlanHeader) {
                     orderedQuantity = quantity
                 }
                 orderedValue = orderedQuantity.multiply(unitPrice);
-                orderedUnitsTotal = orderedUnitsTotal.add(orderedQuantity)
+                orderedQuantityTotal = orderedQuantityTotal.add(orderedQuantity)
                 orderedValueTotal = orderedValueTotal.add(orderedValue)
-                itemMap.orderedUnits = orderedQuantity
+                itemMap.orderedQuantity = orderedQuantity
                 itemMap.orderedValue = orderedValue
-                newSummaryMap.orderedUnits = orderedQuantity
+                newSummaryMap.orderedQuantity = orderedQuantity
                 newSummaryMap.orderedValue = orderedValue
 
                 // Reserved quantity
@@ -118,8 +118,8 @@ if (allocationPlanHeader) {
                     quantityNotAvailable = reservation.quantityNotAvailable?reservation.quantityNotAvailable:0.0
                     reservedQuantity += (quantityAvailable - quantityNotAvailable)
                 }
-                reservedUnitsTotal = reservedUnitsTotal.add(reservedQuantity)
-                itemMap.reservedUnits = reservedQuantity
+                reservedQuantityTotal = reservedQuantityTotal.add(reservedQuantity)
+                itemMap.reservedQuantity = reservedQuantity
 
                 //TODO: Estimated Ship Date, need to check the right way to get it
                 itemMap.estimatedShipDate = orderItem.estimatedShipDate
@@ -127,11 +127,11 @@ if (allocationPlanHeader) {
             allocatedQuantity = allocationPlanItem.allocatedQuantity
             if (allocatedQuantity) {
                 allocatedValue = allocatedQuantity.multiply(unitPrice);
-                allocatedUnitsTotal = allocatedUnitsTotal.add(allocatedQuantity)
+                allocatedQuantityTotal = allocatedQuantityTotal.add(allocatedQuantity)
                 allocatedValueTotal = allocatedValueTotal.add(allocatedValue)
-                itemMap.allocatedUnits = allocatedQuantity
+                itemMap.allocatedQuantity = allocatedQuantity
                 itemMap.allocatedValue = allocatedValue
-                newSummaryMap.allocatedUnits = allocatedQuantity
+                newSummaryMap.allocatedQuantity = allocatedQuantity
                 newSummaryMap.allocatedValue = allocatedValue
             }
 
@@ -144,15 +144,15 @@ if (allocationPlanHeader) {
 
             if (summaryMap.containsKey(salesChannelEnumId)) {
                 existingSummaryMap = summaryMap.get(salesChannelEnumId)
-                existingSummaryMap.orderedUnits += newSummaryMap.orderedUnits
+                existingSummaryMap.orderedQuantity += newSummaryMap.orderedQuantity
                 existingSummaryMap.orderedValue += newSummaryMap.orderedValue
-                if (existingSummaryMap.allocatedUnits) {
-                    if (!newSummaryMap.allocatedUnits) {
-                        newSummaryMap.allocatedUnits = 0
+                if (existingSummaryMap.allocatedQuantity) {
+                    if (!newSummaryMap.allocatedQuantity) {
+                        newSummaryMap.allocatedQuantity = 0
                     }
-                    existingSummaryMap.allocatedUnits += newSummaryMap.allocatedUnits
+                    existingSummaryMap.allocatedQuantity += newSummaryMap.allocatedQuantity
                 } else {
-                    existingSummaryMap.allocatedUnits = newSummaryMap.allocatedUnits
+                    existingSummaryMap.allocatedQuantity = newSummaryMap.allocatedQuantity
                 }
                 if (existingSummaryMap.allocatedValue) {
                     if (!newSummaryMap.allocatedValue) {
@@ -163,8 +163,8 @@ if (allocationPlanHeader) {
                     existingSummaryMap.allocatedValue = newSummaryMap.allocatedValue
                 }
                 allocationPercentage = 0.0
-                if (existingSummaryMap.orderedUnits && existingSummaryMap.orderedUnits != 0 && existingSummaryMap.allocatedUnits && existingSummaryMap.allocatedUnits != 0) {
-                    allocationPercentage = (existingSummaryMap.allocatedUnits.divide(existingSummaryMap.orderedUnits, 2, RoundingMode.HALF_UP)).multiply(100)
+                if (existingSummaryMap.orderedQuantity && existingSummaryMap.orderedQuantity != 0 && existingSummaryMap.allocatedQuantity && existingSummaryMap.allocatedQuantity != 0) {
+                    allocationPercentage = (existingSummaryMap.allocatedQuantity.divide(existingSummaryMap.orderedQuantity, 2, RoundingMode.HALF_UP)).multiply(100)
                 }
                 existingSummaryMap.allocationPercentage = allocationPercentage
                 summaryMap.put(salesChannelEnumId, existingSummaryMap)
@@ -175,13 +175,13 @@ if (allocationPlanHeader) {
         itemList.add(itemMap)
     }
     allocationPercentageTotal = 0.0
-    if (orderedUnitsTotal != 0.0 && allocatedUnitsTotal != 0.0) {
-        allocationPercentageTotal = (allocatedUnitsTotal.divide(orderedUnitsTotal, 2, RoundingMode.HALF_UP)).multiply(100)
+    if (orderedQuantityTotal != 0.0 && allocatedQuantityTotal != 0.0) {
+        allocationPercentageTotal = (allocatedQuantityTotal.divide(orderedQuantityTotal, 2, RoundingMode.HALF_UP)).multiply(100)
     }
-    allocationPlanInfo.orderedUnitsTotal = orderedUnitsTotal
+    allocationPlanInfo.orderedQuantityTotal = orderedQuantityTotal
     allocationPlanInfo.orderedValueTotal = orderedValueTotal
-    allocationPlanInfo.reservedUnitsTotal = reservedUnitsTotal
-    allocationPlanInfo.allocatedUnitsTotal = allocatedUnitsTotal
+    allocationPlanInfo.reservedQuantityTotal = reservedQuantityTotal
+    allocationPlanInfo.allocatedQuantityTotal = allocatedQuantityTotal
     allocationPlanInfo.allocatedValueTotal = allocatedValueTotal
     allocationPlanInfo.allocationPercentageTotal = allocationPercentageTotal
     allocationPlanInfo.summaryMap = summaryMap

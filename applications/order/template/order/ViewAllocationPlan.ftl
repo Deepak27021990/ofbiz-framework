@@ -169,18 +169,18 @@ under the License.
           <#assign summary = allocationPlanInfo.summaryMap.get(key)/>
           <tr>
             <td>${summary.salesChannel!}</td>
-            <td align="right">${summary.orderedUnits!}</td>
+            <td align="right">${summary.orderedQuantity!}</td>
             <td align="right">${summary.orderedValue!}</td>
-            <td align="right">${summary.allocatedUnits!}</td>
+            <td align="right">${summary.allocatedQuantity!}</td>
             <td align="right">${summary.allocatedValue!}</td>
             <td align="right">${summary.allocationPercentage!}</td>
           </tr>
         </#list>
         <tr>
           <td ><b>${uiLabelMap.CommonTotal}</b></td>
-          <td align="right"><b>${allocationPlanInfo.orderedUnitsTotal!}</b></td>
+          <td align="right"><b>${allocationPlanInfo.orderedQuantityTotal!}</b></td>
           <td align="right"><b>${allocationPlanInfo.orderedValueTotal!}</b></td>
-          <td align="right"><b>${allocationPlanInfo.allocatedUnitsTotal!}</b></td>
+          <td align="right"><b>${allocationPlanInfo.allocatedQuantityTotal!}</b></td>
           <td align="right"><b>${allocationPlanInfo.allocatedValueTotal!}</b></td>
           <td align="right"><b>${allocationPlanInfo.allocationPercentageTotal!}</b></td>
         </tr>
@@ -240,18 +240,18 @@ under the License.
             <td><a href="/ordermgr/control/orderview?orderId=${item.orderId!}" title="${item.orderId!}">${item.orderId!}</a></td>
             <td>${item.orderItemSeqId!}</td>
             <td>${item.estimatedShipDate!}</td>
-            <td align="right">${item.orderedUnits!}</td>
-            <td align="right">${item.reservedUnits!}</td>
+            <td align="right">${item.orderedQuantity!}</td>
+            <td align="right">${item.reservedQuantity!}</td>
             <td align="right">${item.orderedValue!}</td>
             <#if editMode>
-              <td><input type="text" name="allocatedQuantity_o_${rowCount}" value="${item.allocatedUnits!}"></td>
+              <td><input type="text" name="allocatedQuantity_o_${rowCount}" value="${item.allocatedQuantity!}"></td>
               <td align="right">${item.allocationPercentage!}</td>
               <td align="right">
                 <a href="#" class="up"><img src="/images/arrow-single-up-green.png"/></a>
                 <a href="#" class="down"><img src="/images/arrow-single-down-green.png"/></a>
               </td>
             <#else>
-              <td align="right">${item.allocatedUnits!}</td>
+              <td align="right">${item.allocatedQuantity!}</td>
               <td align="right">${item.allocationPercentage!}</td>
             </#if>
           </tr>
@@ -262,10 +262,10 @@ under the License.
             <td></td>
           </#if>
           <td colspan="5"><b>${uiLabelMap.CommonTotal}</b></td>
-          <td align="right"><b>${allocationPlanInfo.orderedUnitsTotal!}</b></td>
-          <td align="right"><b>${allocationPlanInfo.reservedUnitsTotal!}</b></td>
+          <td align="right"><b>${allocationPlanInfo.orderedQuantityTotal!}</b></td>
+          <td align="right"><b>${allocationPlanInfo.reservedQuantityTotal!}</b></td>
           <td align="right"><b>${allocationPlanInfo.orderedValueTotal!}</b></td>
-          <td align="right"><b>${allocationPlanInfo.allocatedUnitsTotal!}</b></td>
+          <td align="right"><b>${allocationPlanInfo.allocatedQuantityTotal!}</b></td>
           <td align="right"><b>${allocationPlanInfo.allocationPercentageTotal!}</b></td>
           <#if editMode>
             <td></td>
