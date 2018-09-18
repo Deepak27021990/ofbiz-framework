@@ -141,6 +141,16 @@ under the License.
               </#if>
             </tr>
           </#list>
+          <tr>
+            <td colspan="5"><b>${uiLabelMap.CommonTotal}</b></td>
+            <td align="right"><b>${allocationPlanInfo.orderedQuantityTotal!}</b></td>
+            <td align="right"><b>${allocationPlanInfo.reservedQuantityTotal!}</b></td>
+            <td align="right"><b>${allocationPlanInfo.orderedValueTotal!}</b></td>
+            <td align="right"></td>
+            <#if editMode=="Y">
+              <td></td>
+            </#if>
+          </tr>
         </table>
       </div>
     </div>

@@ -29,6 +29,10 @@ productId = parameters.productId
 planName = parameters.planName
 
 if (productId) {
+    orderedQuantityTotal = 0.0
+    orderedValueTotal = 0.0
+    reservedQuantityTotal = 0.0
+
     ecl = EntityCondition.makeCondition([
                             EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId),
                             EntityCondition.makeCondition("statusId", EntityOperator.IN, ["ALLOC_PLAN_CREATED", "ALLOC_PLAN_APPROVED"]),
@@ -70,8 +74,11 @@ if (productId) {
             } else {
                 orderedQuantity = quantity
             }
+            orderedValue = orderedQuantity.multiply(unitPrice)
+            orderedQuantityTotal = orderedQuantityTotal.add(orderedQuantity)
+            orderedValueTotal = orderedValueTotal.add(orderedValue)
             itemMap.orderedQuantity = orderedQuantity
-            itemMap.orderedValue = orderedQuantity.multiply(unitPrice)
+            itemMap.orderedValue = orderedValue
 
             // Reserved quantity
             reservedQuantity = 0.0
@@ -81,12 +88,16 @@ if (productId) {
                     reservedQuantity += reservation.quantity
                 }
             }
+            reservedQuantityTotal = reservedQuantityTotal.add(reservedQuantity)
             itemMap.reservedQuantity = reservedQuantity
             itemList.add(itemMap)
         }
     } else {
         isPlanAlreadyExists = true
     }
+    allocationPlanInfo.orderedQuantityTotal = orderedQuantityTotal
+    allocationPlanInfo.orderedValueTotal = orderedValueTotal
+    allocationPlanInfo.reservedQuantityTotal = reservedQuantityTotal
 }
 allocationPlanInfo.isPlanAlreadyExists = isPlanAlreadyExists
 allocationPlanInfo.itemList = itemList
