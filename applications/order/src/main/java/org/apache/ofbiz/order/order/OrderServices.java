@@ -7150,6 +7150,7 @@ public class OrderServices {
                         reservedQuantity = reservedQuantity.add(quantityAvailable.subtract(quantityNotAvailable));
                     }
                     BigDecimal toBeReservedQuantity = allocatedQuantity.subtract(reservedQuantity);
+                    Debug.log("===========toBeReservedQuantity============"+toBeReservedQuantity);
 
                     Map<String, Object> serviceCtx = new HashMap<>();
                     serviceCtx.put("productStoreId", orh.getProductStoreId());
