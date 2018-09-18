@@ -176,6 +176,14 @@ under the License.
             <td align="right">${summary.allocationPercentage!}</td>
           </tr>
         </#list>
+        <tr>
+          <td ><b>${uiLabelMap.CommonTotal}</b></td>
+          <td align="right"><b>${allocationPlanInfo.orderedUnitsTotal!}</b></td>
+          <td align="right"><b>${allocationPlanInfo.orderedValueTotal!}</b></td>
+          <td align="right"><b>${allocationPlanInfo.allocatedUnitsTotal!}</b></td>
+          <td align="right"><b>${allocationPlanInfo.allocatedValueTotal!}</b></td>
+          <td align="right"><b>${allocationPlanInfo.allocationPercentageTotal!}</b></td>
+        </tr>
       </table>
   </div>
 </div>
@@ -249,6 +257,20 @@ under the License.
           </tr>
           <#assign rowCount = rowCount + 1>
         </#list>
+        <tr>
+          <#if editMode>
+            <td></td>
+          </#if>
+          <td colspan="5"><b>${uiLabelMap.CommonTotal}</b></td>
+          <td align="right"><b>${allocationPlanInfo.orderedUnitsTotal!}</b></td>
+          <td align="right"><b>${allocationPlanInfo.reservedUnitsTotal!}</b></td>
+          <td align="right"><b>${allocationPlanInfo.orderedValueTotal!}</b></td>
+          <td align="right"><b>${allocationPlanInfo.allocatedUnitsTotal!}</b></td>
+          <td align="right"><b>${allocationPlanInfo.allocationPercentageTotal!}</b></td>
+          <#if editMode>
+            <td></td>
+          </#if>
+        </tr>
         <input type="hidden" name="_rowCount" value="${rowCount}" />
       </form>
     </table>
