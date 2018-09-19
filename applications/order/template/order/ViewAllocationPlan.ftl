@@ -103,19 +103,6 @@ under the License.
             </form>
           </li>
         </#if>
-        <#if allocationPlanInfo.statusId! == "ALLOC_PLAN_APPROVED">
-          <li>
-            <#if allocationPlanInfo.orderedQuantityTotal == allocationPlanInfo.allocatedQuantityTotal>
-              <a href="javascript:document.CompletePlan.submit()">${uiLabelMap.OrderCompletePlan}</a>
-              <form class="basic-form" name="CompletePlan" method="post" action="<@ofbizUrl>changeAllocationPlanStatus/orderview</@ofbizUrl>">
-                <input type="hidden" name="planId" value="${allocationPlanInfo.planId!}"/>
-                <input type="hidden" name="statusId" value="ALLOC_PLAN_COMPLETED"/>
-              </form>
-            <#else>
-              <label title="${uiLabelMap.OrderCannotCompleteAllocationPlan}">${uiLabelMap.OrderCompletePlan}</lable>
-            </#if>
-          </li>
-        </#if>
         <#if allocationPlanInfo.statusId! == "ALLOC_PLAN_CREATED">
           <li>
             <a href="javascript:document.ApprovePlan.submit()">${uiLabelMap.OrderApprovePlan}</a>

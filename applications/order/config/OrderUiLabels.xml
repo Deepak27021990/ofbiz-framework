@@ -2799,9 +2799,6 @@
         <value xml:lang="zh">对不起，你不能修改促销明细${productName}的数量(产品标识：${productId}，没有设置数量。)</value>
         <value xml:lang="zh-TW">對不起,你不能修改促銷細項${productName}的數量(產品識別:${productId},沒有設定數量.)</value>
     </property>
-    <property key="OrderCannotCompleteAllocationPlan">
-        <value xml:lang="en">Cannot complete allocation plan, allocated quantity is less than ordered quantity.</value>
-    </property>
     <property key="OrderCaptureService">
         <value xml:lang="de">Abbuchungsservice</value>
         <value xml:lang="en">Service capture</value>
@@ -3154,9 +3151,6 @@
         <value xml:lang="zh">开源软件OFBiz家族的一部分</value>
         <value xml:lang="zh-CN">OFBiz的一部分</value>
         <value xml:lang="zh-TW">開源軟體OFBiz家族的一部分</value>
-    </property>
-    <property key="OrderCompletePlan">
-        <value xml:lang="en">Complete Plan</value>
     </property>
     <property key="OrderCompleteOrder">
         <value xml:lang="ar">إكمال أمر البيع\الشراء</value>

@@ -491,11 +491,6 @@ under the License.
         <action service="approveAllocationPlanItems" mode="sync"/>
     </eca>
     <eca service="changeAllocationPlanStatus" event="commit">
-        <condition field-name="statusId" operator="equals" value="ALLOC_PLAN_COMPLETED"/>
-        <action service="completeAllocationPlanItems" mode="sync"/>
-        <action service="reserveOrderInventoryByAllocationPlan" mode="sync"/>
-    </eca>
-    <eca service="changeAllocationPlanStatus" event="commit">
         <condition field-name="statusId" operator="equals" value="ALLOC_PLAN_CANCELLED"/>
         <action service="cancelAllocationPlanItems" mode="sync"/>
     </eca>

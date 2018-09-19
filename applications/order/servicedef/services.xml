@@ -1283,11 +1283,6 @@ under the License.
         <description>Mark all the items of an allocation plan as approve</description>
         <attribute name="planId" type="String" mode="IN"/>
     </service>
-    <service name="completeAllocationPlanItems" engine="java" auth="true"
-            location="org.apache.ofbiz.order.order.OrderServices" invoke="completeAllocationPlanItems">
-        <description>Mark all the items of an allocation plan as complete</description>
-        <attribute name="planId" type="String" mode="IN"/>
-    </service>
     <service name="cancelAllocationPlanItems" engine="java" auth="true"
             location="org.apache.ofbiz.order.order.OrderServices" invoke="cancelAllocationPlanItems">
         <description>Mark all the items of an allocation plan as cancel</description>
@@ -1336,10 +1331,5 @@ under the License.
         <attribute name="itemOrderItemSeqIdMap" type="Map" mode="IN" string-map-prefix="ioisim_"/>
         <attribute name="itemAllocatedQuantityMap" type="Map" mode="IN" string-map-prefix="iaqm_"/>
         <attribute name="planId" type="String" mode="OUT"/>
-    </service>
-    <service name="reserveOrderInventoryByAllocationPlan" engine="java" auth="true"
-             location="org.apache.ofbiz.order.order.OrderServices" invoke="reserveOrderInventoryByAllocationPlan">
-        <description>Reserve Order Inventory By Allocation</description>
-        <attribute name="planId" type="String" mode="IN"/>
     </service>
 </services>
