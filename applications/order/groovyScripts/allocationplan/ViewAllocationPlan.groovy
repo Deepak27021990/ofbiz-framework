@@ -187,4 +187,5 @@ if (allocationPlanHeader) {
     allocationPlanInfo.summaryMap = summaryMap
     allocationPlanInfo.itemList = itemList
 }
+allocationPlanInfo.allocationPlanHeader = allocationPlanHeader
 context.allocationPlanInfo = allocationPlanInfo

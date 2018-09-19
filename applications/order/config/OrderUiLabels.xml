@@ -2090,6 +2090,9 @@
     <property key="OrderAllocationPlan">
         <value xml:lang="en">Allocation Plan</value>
     </property>
+    <property key="OrderAllocationPlanNotFound">
+        <value xml:lang="en">Allocation Plan Not Found.</value>
+    </property>
     <property key="OrderAllowSolicitation">
         <value xml:lang="ar">السماح بالإستدعاءات</value>
         <value xml:lang="de">(Werbung gestatten?)</value>
