@@ -916,9 +916,9 @@ under the License.
                     <calcop operator="add" field="totalReservedQuantity"/>
                 </calculate>
             </iterate>
-            <!-- Calculate the net quantity to be reserved -->
-            <calculate field="toBeRservedQuantity" decimal-scale="6">
-                <calcop operator="subtract" field="allocationPlanAndItem.allocatedQuantity">
+            <calculate field="toBeRservedQuantity">
+                <calcop operator="subtract">
+                    <calcop operator="get" field="allocationPlanAndItem.allocatedQuantity"/>
                     <calcop operator="get" field="totalReservedQuantity"/>
                 </calcop>
             </calculate>
@@ -934,7 +934,7 @@ under the License.
             <set field="resMap.shipGroupSeqId" from-field="orderItemShipGroup.shipGroupSeqId"/>
             <set field="resMap.facilityId" from-field="parameters.facilityId"/>
             <set field="resMap.priority" from-field="allocationPlanAndItem.prioritySeqId" type="String"/>
-            <log level="info" message="Reserving product [${resMap.productId}] for order item [${resMap.orderId}:${resMap.orderItemSeqId}] quantity [${allocationPlanAndItem.allocatedQuantity}]; facility [${parameters.facilityId}]"/>
+            <log level="info" message="Reserving product [${resMap.productId}] for order item [${resMap.orderId}:${resMap.orderItemSeqId}] quantity [${toBeRservedQuantity}]; facility [${parameters.facilityId}]"/>
             <call-service service-name="reserveProductInventoryByFacility" in-map-name="resMap"/>
         </iterate>
         <!-- now go through touchedOrderIdMap keys and make a Set/Map of orderIds that are no longer on back-order -->
