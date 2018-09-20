@@ -6807,7 +6807,7 @@ public class OrderServices {
             if (orderItemSeqId != null) {
                 exprs.add(EntityCondition.makeCondition("orderItemSeqId", orderItemSeqId));
             } else {
-                exprs.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("ITEM_COMPLETED", "ITEM_CANCELLED")));
+                exprs.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("ALLOC_PLAN_ITEM_CMPL", "ALLOC_PLAN_ITEM_CNCL")));
             }
 
             List<GenericValue> allocationPlanItems = EntityQuery.use(delegator).from("AllocationPlanItem").where(exprs).queryList();
@@ -6881,7 +6881,7 @@ public class OrderServices {
             if (orderItemSeqId != null) {
                 exprs.add(EntityCondition.makeCondition("orderItemSeqId", orderItemSeqId));
             } else {
-                exprs.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("ITEM_COMPLETED", "ITEM_CANCELLED")));
+                exprs.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("ALLOC_PLAN_ITEM_CMPL", "ALLOC_PLAN_ITEM_CNCL")));
             }
 
             List<GenericValue> allocationPlanItems = EntityQuery.use(delegator).from("AllocationPlanItem").where(exprs).queryList();
