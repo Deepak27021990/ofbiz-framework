@@ -26,15 +26,15 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for ORDERMGR, _VIEW permission -->
+                            <!-- do check for ALLOCPLAN, _VIEW permission -->
                             <condition>
-                                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                                <if-has-permission permission="ALLOCPLAN" action="_VIEW"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.OrderViewPermissionError}</label>
+                                <label style="h3">${uiLabelMap.OrderAllocationPlanViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -82,6 +82,9 @@ under the License.
                 <decorator-screen name="CommonAllocationPlanDecorator" location="${parameters.commonAllocationPlanDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
+                            <condition>
+                                <if-has-permission permission="ALLOCPLAN" action="_CREATE"/>
+                            </condition>
                             <widgets>
                                 <container style="button-bar">
                                     <link target="CreateAllocationPlan" text="${uiLabelMap.OrderNewAllocationPlan}" style="buttontext"/>
@@ -114,6 +117,9 @@ under the License.
                 <decorator-screen name="CommonAllocationPlanDecorator" location="${parameters.commonAllocationPlanDecorator}">
                     <decorator-section name="body">
                         <section>
+                            <condition>
+                                <if-has-permission permission="ALLOCPLAN" action="_CREATE"/>
+                            </condition>
                             <widgets>
                                 <container style="button-bar">
                                     <link target="CreateAllocationPlan" text="${uiLabelMap.OrderNewAllocationPlan}" style="buttontext"/>
