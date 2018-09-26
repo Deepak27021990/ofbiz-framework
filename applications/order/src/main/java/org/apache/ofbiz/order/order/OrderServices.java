@@ -6549,10 +6549,12 @@ public class OrderServices {
                 if (allocationPlanItem == null) {
                     //Add the orderItem to the allocation plan
                     serviceCtx.put("planId", planId);
-                    serviceCtx.put("statusId", "ALLOC_PLAN_ITEM_CRTD");
                     serviceCtx.put("planMethodEnumId", planMethodEnumId);
                     if ("AUTO".equals(planMethodEnumId)) {
                         serviceCtx.put("allocatedQuantity", orderItem.getBigDecimal("quantity"));
+                        serviceCtx.put("statusId", "ALLOC_PLAN_ITEM_APRV");
+                    } else {
+                        serviceCtx.put("statusId", "ALLOC_PLAN_ITEM_CRTD");
                     }
                     serviceCtx.put("orderId", orderId);
                     serviceCtx.put("orderItemSeqId", orderItemSeqId);
@@ -6573,6 +6575,9 @@ public class OrderServices {
                     serviceCtx.put("planMethodEnumId", planMethodEnumId);
                     if ("AUTO".equals(planMethodEnumId)) {
                         serviceCtx.put("allocatedQuantity", orderItem.getBigDecimal("quantity"));
+                        serviceCtx.put("statusId", "ALLOC_PLAN_ITEM_APRV");
+                    } else {
+                        serviceCtx.put("statusId", "ALLOC_PLAN_ITEM_CRTD");
                     }
                     serviceCtx.put("lastModifiedByUserLogin", userLoginId);
                     serviceCtx.put("userLogin", userLogin);

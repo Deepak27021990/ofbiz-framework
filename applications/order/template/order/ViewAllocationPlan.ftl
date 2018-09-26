@@ -202,16 +202,17 @@ under the License.
               <#if editMode>
                 <td width="5%"><input type="checkbox" id="checkAllItems" name="checkAllItems" onchange="javascript:toggleAllItems(this);"></td>
               </#if>
-              <td width="9%">${uiLabelMap.OrderSalesChannel}</td>
-              <td width="9%">${uiLabelMap.OrderCustomer}</td>
-              <td width="9%">${uiLabelMap.FormFieldTitle_orderId}</td>
-              <td width="9%">${uiLabelMap.FormFieldTitle_orderItemSeqId}</td>
-              <td width="9%">${uiLabelMap.FormFieldTitle_estimatedShipDate}</td>
-              <td align="right" width="9%">${uiLabelMap.OrderOrdered}</td>
-              <td align="right" width="9%">${uiLabelMap.ProductReserved}</td>
-              <td align="right" width="9%">${uiLabelMap.OrderExtValue}</td>
-              <td align="right" width="9%">${uiLabelMap.OrderAllocated}</td>
-              <td align="right" width="9%">${uiLabelMap.OrderAllocation} %</td>
+              <td width="8%">${uiLabelMap.OrderSalesChannel}</td>
+              <td width="8%">${uiLabelMap.OrderCustomer}</td>
+              <td width="8%">${uiLabelMap.Status}</td>
+              <td width="8%">${uiLabelMap.FormFieldTitle_orderId}</td>
+              <td width="8%">${uiLabelMap.FormFieldTitle_orderItemSeqId}</td>
+              <td width="10%">${uiLabelMap.FormFieldTitle_estimatedShipDate}</td>
+              <td align="right" width="8%">${uiLabelMap.OrderOrdered}</td>
+              <td align="right" width="8%">${uiLabelMap.ProductReserved}</td>
+              <td align="right" width="8%">${uiLabelMap.OrderExtValue}</td>
+              <td align="right" width="8%">${uiLabelMap.OrderAllocated}</td>
+              <td align="right" width="8%">${uiLabelMap.OrderAllocation} %</td>
               <#if editMode>
                 <td align="right" width="5%">${uiLabelMap.FormFieldTitle_actionEnumId}</td>
               </#if>
@@ -229,6 +230,8 @@ under the License.
                 </#if>
                 <td>${item.salesChannel!}</td>
                 <td><a href="/partymgr/control/viewprofile?partyId=${item.partyId!}" title="${item.partyId!}">${item.partyName!}</a></td>
+                <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : item.statusId!}, false)!/>
+                <td>${statusItem.get("description")}</td>
                 <td><a href="/ordermgr/control/orderview?orderId=${item.orderId!}" title="${item.orderId!}">${item.orderId!}</a></td>
                 <td>${item.orderItemSeqId!}</td>
                 <td>${item.estimatedShipDate!}</td>
@@ -253,7 +256,7 @@ under the License.
               <#if editMode>
                 <td></td>
               </#if>
-              <td colspan="5"><b>${uiLabelMap.CommonTotal}</b></td>
+              <td colspan="6"><b>${uiLabelMap.CommonTotal}</b></td>
               <td align="right"><b>${allocationPlanInfo.orderedQuantityTotal!}</b></td>
               <td align="right"><b>${allocationPlanInfo.reservedQuantityTotal!}</b></td>
               <td align="right"><b>${allocationPlanInfo.orderedValueTotal!}</b></td>
