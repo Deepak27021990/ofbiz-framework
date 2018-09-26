@@ -1332,4 +1332,12 @@ under the License.
         <attribute name="itemAllocatedQuantityMap" type="Map" mode="IN" string-map-prefix="iaqm_"/>
         <attribute name="planId" type="String" mode="OUT"/>
     </service>
+
+    <service name="isInventoryAllocationRequired" engine="java" auth="true"
+             location="org.apache.ofbiz.order.order.OrderServices" invoke="isInventoryAllocationRequired">
+        <description>Check whether the inventory allocation is enabled or not at product store.</description>
+        <attribute name="serviceContext" type="Map" mode="IN"/>
+        <attribute name="serviceName" type="String" mode="IN"/>
+        <attribute name="conditionReply" type="Boolean" mode="OUT"/>
+    </service>
 </services>

@@ -44,6 +44,7 @@ under the License.
 
     <eca service="storeOrder" event="return">
         <condition field-name="orderTypeId" operator="equals" value="SALES_ORDER"/>
+        <condition-service service-name="isInventoryAllocationRequired"/>
         <action service="associateOrderWithAllocationPlans" mode="sync"/>
     </eca>
 

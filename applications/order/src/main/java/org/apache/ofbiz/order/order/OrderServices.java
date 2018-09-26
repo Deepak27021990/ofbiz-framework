@@ -7067,4 +7067,21 @@ public class OrderServices {
         serviceResult.put("planId", planId);
         return serviceResult;
     }
+
+    public static Map<String, Object> isInventoryAllocationRequired(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Boolean allocateInventory = false;
+        Map<String, Object> serviceContext = UtilGenerics.checkMap(context.get("serviceContext"));
+        String orderId = (String) serviceContext.get("orderId");
+
+        OrderReadHelper orderReadHelper = new OrderReadHelper(delegator, orderId);
+        GenericValue productStore = orderReadHelper.getProductStore();
+        if (productStore != null && "Y".equals(productStore.getString("allocateInventory"))) {
+            allocateInventory = true;
+        }
+        Map<String, Object> serviceResult = new HashMap<String, Object>();
+        serviceResult.put("conditionReply", allocateInventory);
+        return serviceResult;
+    }
 }
