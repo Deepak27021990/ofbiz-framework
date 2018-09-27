@@ -883,6 +883,13 @@ under the License.
     <simple-method method-name="reassignInventoryReservationsByAllocationPlan" short-description="Balances available-to-promise on inventory items">
         <now-timestamp field="nowTimestamp"/>
         <iterate list="parameters.allocationPlanAndItemList" entry="allocationPlanAndItem">
+            <entity-one entity-name="OrderHeader" value-field="orderHeader">
+                <field-map field-name="orderId" from-field="allocationPlanAndItem.orderId"/>
+            </entity-one>
+            <get-related-one value-field="orderHeader" relation-name="ProductStore" to-value-field="productStore"/>
+            <if-compare field="productStore.allocateInventory" operator="not-equals" value="Y">
+                <continue></continue>
+            </if-compare>
             <entity-one entity-name="OrderItem" value-field="orderItem">
                 <field-map field-name="orderId" from-field="allocationPlanAndItem.orderId"/>
                 <field-map field-name="orderItemSeqId" from-field="allocationPlanAndItem.orderItemSeqId"/>
