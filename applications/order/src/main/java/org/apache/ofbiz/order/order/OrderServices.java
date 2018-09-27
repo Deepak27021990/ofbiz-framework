@@ -6511,7 +6511,11 @@ public class OrderServices {
                 }
                 //Look for any existing open allocation plan, if not available create a new one
                 String planId = null;
-                GenericValue allocationPlanHeader = EntityQuery.use(delegator).from("AllocationPlanHeader").where("productId", productId, "planTypeId", "SALES_ORD_ALLOCATION", "statusId", "ALLOC_PLAN_CREATED").queryFirst();
+                List<EntityCondition> headerConditions = new ArrayList();
+                headerConditions.add(EntityCondition.makeCondition("productId", productId));
+                headerConditions.add(EntityCondition.makeCondition("planTypeId", "SALES_ORD_ALLOCATION"));
+                headerConditions.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("ALLOC_PLAN_CREATED", "ALLOC_PLAN_APPROVED")));
+                GenericValue allocationPlanHeader = EntityQuery.use(delegator).from("AllocationPlanHeader").where(headerConditions).queryFirst();
                 if (allocationPlanHeader == null) {
                     planId = delegator.getNextSeqId("AllocationPlanHeader");
                     serviceCtx.put("planId", planId);
@@ -6530,6 +6534,8 @@ public class OrderServices {
                     planId = allocationPlanHeader.getString("planId");
                     serviceCtx.put("planId", planId);
                     serviceCtx.put("productId", productId);
+                    //If an item added to already approved plan, it should be moved to created status
+                    serviceCtx.put("statusId", "ALLOC_PLAN_CREATED");
                     serviceCtx.put("lastModifiedByUserLogin", userLoginId);
                     serviceCtx.put("userLogin", userLogin);
                     serviceResult = dispatcher.runSync("updateAllocationPlanHeader", serviceCtx);

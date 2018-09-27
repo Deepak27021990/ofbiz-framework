@@ -393,6 +393,7 @@ under the License.
     <Enumeration description="Manual" enumCode="MANUAL" enumId="MANUAL" enumTypeId="ALLOC_PLAN_METHOD" sequenceId="02"/>
     <StatusValidChange statusId='ALLOC_PLAN_CREATED' statusIdTo='ALLOC_PLAN_APPROVED' transitionName='Approve'/>
     <StatusValidChange statusId='ALLOC_PLAN_CREATED' statusIdTo='ALLOC_PLAN_CANCELLED' transitionName='Cancel'/>
+    <StatusValidChange statusId='ALLOC_PLAN_APPROVED' statusIdTo='ALLOC_PLAN_CREATED' transitionName='Create'/>
     <StatusValidChange statusId='ALLOC_PLAN_APPROVED' statusIdTo='ALLOC_PLAN_COMPLETED' transitionName='Complete'/>
     <StatusValidChange statusId='ALLOC_PLAN_APPROVED' statusIdTo='ALLOC_PLAN_CANCELLED' transitionName='Cancel'/>
     <StatusValidChange statusId='ALLOC_PLAN_ITEM_CRTD' statusIdTo='ALLOC_PLAN_ITEM_APRV' transitionName='Approve'/>
