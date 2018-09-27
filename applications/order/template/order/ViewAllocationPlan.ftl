@@ -23,7 +23,7 @@ under the License.
         var length = form.elements.length;
         for (var i = 0; i < length; i++) {
             var element = form.elements[i];
-            if (element.name.match(/_rowSubmit_o_.*/)) {
+            if (element.name.match(/rsm_.*/)) {
                 element.checked = master.checked;
             }
         }
@@ -46,7 +46,7 @@ under the License.
         var isAnyOneSelected = false;
         for (var i = 0; i < length; i++) {
             var element = form.elements[i];
-            if (element.name.match(/_rowSubmit_o_.*/)) {
+            if (element.name.match(/rsm_.*/)) {
                 if (element.checked) {
                     isAnyOneSelected = true;
                 } else {
@@ -197,7 +197,7 @@ under the License.
         <#assign rowCount = 0>
         <table id="allocatioPlanItemsTable" class="basic-table hover-bar" cellspacing='0'>
           <form class="basic-form" name="updateAllocationPlanItems" id="updateAllocationPlanItems" method="post" action="<@ofbizUrl>updateAllocationPlanItems</@ofbizUrl>">
-            <input type="hidden" name="_useRowSubmit" value="Y" />
+            <input type="hidden" name="planId" value="${allocationPlanInfo.planId!}"/>
             <tr class="header-row">
               <#if editMode>
                 <td width="5%"><input type="checkbox" id="checkAllItems" name="checkAllItems" onchange="javascript:toggleAllItems(this);"></td>
@@ -219,13 +219,18 @@ under the License.
             </tr>
             <#list allocationPlanInfo.itemList as item>
               <tr>
-                <input type="hidden" name="prioritySeqId_o_${rowCount}" value="${rowCount+1}" class="prioritySeqId"/>
+                <input type="hidden" name="psim_${item.planItemSeqId}" value="${rowCount+1}" class="prioritySeqId"/>
+                <input type="hidden" name="pim_${item.planItemSeqId}" value="${item.productId}"/>
+                <#--
                 <input type="hidden" name="planId_o_${rowCount}" value="${item.planId}"/>
                 <input type="hidden" name="planItemSeqId_o_${rowCount}" value="${item.planItemSeqId}"/>
-                <input type="hidden" name="productId_o_${rowCount}" value="${item.productId}"/>
+                <input type="hidden" name="planMethodEnumId_o_${rowCount}" value="MANUAL"/>
+                <input type="hidden" name="lastModifiedByUser_o_${rowCount}" value="${userLogin.userLoginId}"/>
+                <input type="hidden" name="statusId_o_${rowCount}" value="ALLOC_PLAN_ITEM_CRTD"/>
+                -->
                 <#if editMode>
                   <td>
-                    <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onchange="javascript:toggleItem();">
+                    <input type="checkbox" name="rsm_${item.planItemSeqId}" value="Y" onchange="javascript:toggleItem();">
                   </td>
                 </#if>
                 <td>${item.salesChannel!}</td>
@@ -239,7 +244,7 @@ under the License.
                 <td align="right">${item.reservedQuantity!}</td>
                 <td align="right">${item.orderedValue!}</td>
                 <#if editMode>
-                  <td><input type="text" name="allocatedQuantity_o_${rowCount}" value="${item.allocatedQuantity!}"></td>
+                  <td><input type="text" name="aqm_${item.planItemSeqId}" value="${item.allocatedQuantity!}"/></td>
                   <td align="right">${item.allocationPercentage!}</td>
                   <td align="right">
                     <a href="#" class="up"><img src="/images/arrow-single-up-green.png"/></a>

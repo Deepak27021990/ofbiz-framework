@@ -398,6 +398,7 @@ under the License.
     <StatusValidChange statusId='ALLOC_PLAN_APPROVED' statusIdTo='ALLOC_PLAN_CANCELLED' transitionName='Cancel'/>
     <StatusValidChange statusId='ALLOC_PLAN_ITEM_CRTD' statusIdTo='ALLOC_PLAN_ITEM_APRV' transitionName='Approve'/>
     <StatusValidChange statusId='ALLOC_PLAN_ITEM_CRTD' statusIdTo='ALLOC_PLAN_ITEM_CNCL' transitionName='Cancel'/>
+    <StatusValidChange statusId='ALLOC_PLAN_ITEM_APRV' statusIdTo='ALLOC_PLAN_ITEM_CRTD' transitionName='Create'/>
     <StatusValidChange statusId='ALLOC_PLAN_ITEM_APRV' statusIdTo='ALLOC_PLAN_ITEM_CMPL' transitionName='Complete'/>
     <StatusValidChange statusId='ALLOC_PLAN_ITEM_APRV' statusIdTo='ALLOC_PLAN_ITEM_CNCL' transitionName='Cancel'/>
 </entity-engine-xml>

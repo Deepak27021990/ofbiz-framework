@@ -7095,4 +7095,70 @@ public class OrderServices {
         serviceResult.put("conditionReply", allocateInventory);
         return serviceResult;
     }
+
+    public static Map<String, Object> updateAllocationPlanItems(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
+        String planId = (String) context.get("planId");
+        Map<String, String> productIdMap = UtilGenerics.checkMap(context.get("productIdMap"));
+        Map<String, String> allocatedQuantityMap = UtilGenerics.checkMap(context.get("allocatedQuantityMap"));
+        Map<String, String> prioritySeqIdMap = UtilGenerics.checkMap(context.get("prioritySeqIdMap"));
+        Map<String, String> rowSubmitMap = UtilGenerics.checkMap(context.get("rowSubmitMap"));
+        Map<String, Object> serviceCtx = new HashMap<String, Object>();
+        Boolean changeHeaderStatus = false;
+        String productId = null;
+
+        try {
+            for (String planItemSeqId : productIdMap.keySet()) {
+                String rowSubmit = (String) rowSubmitMap.get(planItemSeqId);
+                productId = (String) productIdMap.get(planItemSeqId);
+                String prioritySeqId = (String) prioritySeqIdMap.get(planItemSeqId);
+                String allocatedQuantityStr = (String) allocatedQuantityMap.get(planItemSeqId);
+                BigDecimal allocatedQuantity = null;
+                if (allocatedQuantityStr != null) {
+                    try {
+                        allocatedQuantity = (BigDecimal) ObjectType.simpleTypeConvert(allocatedQuantityStr, "BigDecimal", null, locale);
+                    } catch (GeneralException e) {
+                        return ServiceUtil.returnError(e.getMessage());
+                    }
+                }
+                serviceCtx.put("planId", planId);
+                serviceCtx.put("prioritySeqId", prioritySeqId);
+                serviceCtx.put("planItemSeqId", planItemSeqId);
+                serviceCtx.put("productId", productId);
+                serviceCtx.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+                serviceCtx.put("userLogin", userLogin);
+                if (rowSubmit != null && "Y".equals(rowSubmit)) {
+                    serviceCtx.put("allocatedQuantity", allocatedQuantity);
+                    serviceCtx.put("planMethodEnumId", "MANUAL");
+                    serviceCtx.put("statusId", "ALLOC_PLAN_ITEM_CRTD");
+                    changeHeaderStatus = true;
+                }
+                Map<String, Object> serviceResult = dispatcher.runSync("updateAllocationPlanItem", serviceCtx);
+                if (ServiceUtil.isError(serviceResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                }
+                serviceCtx.clear();
+            }
+
+            //If any item got updated, changed the header status to created
+            if (changeHeaderStatus) {
+                serviceCtx.put("planId", planId);
+                serviceCtx.put("productId", productId);
+                serviceCtx.put("statusId", "ALLOC_PLAN_CREATED");
+                serviceCtx.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+                serviceCtx.put("userLogin", userLogin);
+                Map<String, Object> serviceResult = dispatcher.runSync("updateAllocationPlanHeader", serviceCtx);
+                if (ServiceUtil.isError(serviceResult)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                }
+            }
+        } catch (GenericServiceException gse) {
+            return ServiceUtil.returnError(gse.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
+    }
 }

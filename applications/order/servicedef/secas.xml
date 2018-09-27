@@ -502,4 +502,8 @@ under the License.
         <condition field-name="statusId" operator="equals" value="ALLOC_PLAN_CANCELLED"/>
         <action service="cancelAllocationPlanItems" mode="sync"/>
     </eca>
+<!--     <eca service="updateAllocationPlanItems" event="commit">
+        <condition field-name="statusId" operator="equals" value="ALLOC_PLAN_CANCELLED"/>
+        <action service="cancelAllocationPlanItems" mode="sync"/>
+    </eca> -->
 </service-eca>

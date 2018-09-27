@@ -1340,4 +1340,14 @@ under the License.
         <attribute name="serviceName" type="String" mode="IN"/>
         <attribute name="conditionReply" type="Boolean" mode="OUT"/>
     </service>
+
+    <service name="updateAllocationPlanItems" engine="java" auth="true"
+             location="org.apache.ofbiz.order.order.OrderServices" invoke="updateAllocationPlanItems">
+        <description>Update Allocation Plan Items</description>
+        <attribute name="planId" type="String" mode="IN"/>
+        <attribute name="productIdMap" type="Map" mode="IN" string-map-prefix="pim_"/>
+        <attribute name="prioritySeqIdMap" type="Map" mode="IN" string-map-prefix="psim_"/>
+        <attribute name="allocatedQuantityMap" type="Map" mode="IN" string-map-prefix="aqm_"/>
+        <attribute name="rowSubmitMap" type="Map" mode="IN" string-map-prefix="rsm_"/>
+    </service>
 </services>

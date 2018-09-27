@@ -1301,7 +1301,7 @@ under the License.
     </request-map>
     <request-map uri="updateAllocationPlanItems">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updateAllocationPlanItem"/>
+        <event type="service" invoke="updateAllocationPlanItems"/>
         <response name="success" type="request-redirect" value="ViewAllocationPlan">
             <redirect-parameter name="planId"/>
         </response>
