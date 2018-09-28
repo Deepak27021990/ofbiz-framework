@@ -1345,6 +1345,8 @@ under the License.
              location="org.apache.ofbiz.order.order.OrderServices" invoke="updateAllocationPlanItems">
         <description>Update Allocation Plan Items</description>
         <attribute name="planId" type="String" mode="IN"/>
+        <attribute name="orderIdMap" type="Map" mode="IN" string-map-prefix="oim_"/>
+        <attribute name="orderItemSeqIdMap" type="Map" mode="IN" string-map-prefix="oisim_"/>
         <attribute name="productIdMap" type="Map" mode="IN" string-map-prefix="pim_"/>
         <attribute name="prioritySeqIdMap" type="Map" mode="IN" string-map-prefix="psim_"/>
         <attribute name="allocatedQuantityMap" type="Map" mode="IN" string-map-prefix="aqm_"/>

@@ -6622,13 +6622,16 @@ public class OrderServices {
             if (userLogin != null) {
                 userLoginId = userLogin.getString("userLoginId");
             }
-            //Get the list of plan items
+            //Get the list of plan items in created status
             List<EntityCondition> itemConditions = new ArrayList();
             itemConditions.add(EntityCondition.makeCondition("planId", planId));
             itemConditions.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ALLOC_PLAN_ITEM_CRTD"));
             List<GenericValue> allocationPlanItems = EntityQuery.use(delegator).from("AllocationPlanItem").where(itemConditions).queryList();
 
+            String facilityId = null;
+            String productId = null;
             for (GenericValue allocationPlanItem : allocationPlanItems) {
+                productId = allocationPlanItem.getString("productId");
                 serviceCtx.put("planId", planId);
                 serviceCtx.put("planItemSeqId", allocationPlanItem.getString("planItemSeqId"));
                 serviceCtx.put("productId", allocationPlanItem.getString("productId"));
@@ -6641,7 +6644,32 @@ public class OrderServices {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                 }
                 serviceCtx.clear();
+                GenericValue orderHeader = EntityQuery.use(delegator).from("OrderHeader").where("orderId", allocationPlanItem.getString("orderId")).queryOne();
+                if (orderHeader != null) {
+                    //For now considering single facility case only
+                    facilityId = orderHeader.getString("originFacilityId");
+                }
             }
+
+            //Get the list of plan items in approved status
+            itemConditions.clear();
+            itemConditions.add(EntityCondition.makeCondition("planId", planId));
+            itemConditions.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ALLOC_PLAN_ITEM_APRV"));
+            allocationPlanItems = EntityQuery.use(delegator).from("AllocationPlanItem").where(itemConditions).queryList();
+
+            if (allocationPlanItems.size() > 0) {
+                //Rereserve the inventory
+                serviceCtx.put("productId", productId);
+                serviceCtx.put("facilityId", facilityId);
+                serviceCtx.put("allocationPlanAndItemList", allocationPlanItems);
+                serviceCtx.put("userLogin", userLogin);
+                serviceResult = dispatcher.runSync("reassignInventoryReservationsByAllocationPlan", serviceCtx);
+                if (ServiceUtil.isError(serviceResult)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                }
+            }
+
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
@@ -7102,13 +7130,17 @@ public class OrderServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         String planId = (String) context.get("planId");
+        Map<String, String> orderIdMap = UtilGenerics.checkMap(context.get("orderIdMap"));
         Map<String, String> productIdMap = UtilGenerics.checkMap(context.get("productIdMap"));
         Map<String, String> allocatedQuantityMap = UtilGenerics.checkMap(context.get("allocatedQuantityMap"));
         Map<String, String> prioritySeqIdMap = UtilGenerics.checkMap(context.get("prioritySeqIdMap"));
         Map<String, String> rowSubmitMap = UtilGenerics.checkMap(context.get("rowSubmitMap"));
         Map<String, Object> serviceCtx = new HashMap<String, Object>();
+        Map<String, Object> serviceResult = new HashMap<String, Object>();
         Boolean changeHeaderStatus = false;
         String productId = null;
+        String facilityId = null;
+        List<String> reReservePlanItemSeqIdList = new ArrayList<String>();
 
         try {
             for (String planItemSeqId : productIdMap.keySet()) {
@@ -7124,23 +7156,39 @@ public class OrderServices {
                         return ServiceUtil.returnError(e.getMessage());
                     }
                 }
-                serviceCtx.put("planId", planId);
-                serviceCtx.put("prioritySeqId", prioritySeqId);
-                serviceCtx.put("planItemSeqId", planItemSeqId);
-                serviceCtx.put("productId", productId);
-                serviceCtx.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
-                serviceCtx.put("userLogin", userLogin);
-                if (rowSubmit != null && "Y".equals(rowSubmit)) {
-                    serviceCtx.put("allocatedQuantity", allocatedQuantity);
-                    serviceCtx.put("planMethodEnumId", "MANUAL");
-                    serviceCtx.put("statusId", "ALLOC_PLAN_ITEM_CRTD");
-                    changeHeaderStatus = true;
+
+                GenericValue allocationPlanItem = EntityQuery.use(delegator).from("AllocationPlanItem").where("planId", planId, "planItemSeqId", planItemSeqId, "productId", productId).queryOne();
+                if (allocationPlanItem != null) {
+                    BigDecimal oldAllocatedQuantity = allocationPlanItem.getBigDecimal("allocatedQuantity");
+                    if (oldAllocatedQuantity != null && oldAllocatedQuantity.compareTo(allocatedQuantity) > 0) {
+                        reReservePlanItemSeqIdList.add(planItemSeqId);
+                    }
+
+                    serviceCtx.put("planId", planId);
+                    serviceCtx.put("prioritySeqId", prioritySeqId);
+                    serviceCtx.put("planItemSeqId", planItemSeqId);
+                    serviceCtx.put("productId", productId);
+                    serviceCtx.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+                    serviceCtx.put("userLogin", userLogin);
+                    if (rowSubmit != null && "Y".equals(rowSubmit)) {
+                        serviceCtx.put("allocatedQuantity", allocatedQuantity);
+                        serviceCtx.put("planMethodEnumId", "MANUAL");
+                        serviceCtx.put("statusId", "ALLOC_PLAN_ITEM_CRTD");
+                        changeHeaderStatus = true;
+                    }
+                    serviceResult = dispatcher.runSync("updateAllocationPlanItem", serviceCtx);
+                    if (ServiceUtil.isError(serviceResult)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                    }
+                    serviceCtx.clear();
                 }
-                Map<String, Object> serviceResult = dispatcher.runSync("updateAllocationPlanItem", serviceCtx);
-                if (ServiceUtil.isError(serviceResult)) {
-                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+
+                //Get the facility id from order id
+                String orderId = (String) orderIdMap.get(planItemSeqId);
+                GenericValue orderHeader = EntityQuery.use(delegator).from("OrderHeader").where("orderId", orderId).queryOne();
+                if (orderHeader != null && facilityId == null) {
+                    facilityId = orderHeader.getString("originFacilityId");
                 }
-                serviceCtx.clear();
             }
 
             //If any item got updated, change the header status to created
@@ -7150,7 +7198,28 @@ public class OrderServices {
                 serviceCtx.put("statusId", "ALLOC_PLAN_CREATED");
                 serviceCtx.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
                 serviceCtx.put("userLogin", userLogin);
-                Map<String, Object> serviceResult = dispatcher.runSync("updateAllocationPlanHeader", serviceCtx);
+                serviceResult = dispatcher.runSync("updateAllocationPlanHeader", serviceCtx);
+                if (ServiceUtil.isError(serviceResult)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                }
+                serviceCtx.clear();
+            }
+
+            //Get the list of plan items in the created status
+            List<EntityCondition> itemConditions = new ArrayList();
+            itemConditions.add(EntityCondition.makeCondition("planId", planId));
+            itemConditions.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ALLOC_PLAN_ITEM_CRTD"));
+            itemConditions.add(EntityCondition.makeCondition("planItemSeqId", EntityOperator.IN, reReservePlanItemSeqIdList));
+            List<GenericValue> allocationPlanItems = EntityQuery.use(delegator).from("AllocationPlanItem").where(itemConditions).queryList();
+
+            if (allocationPlanItems.size() > 0) {
+                //Rereserve the inventory
+                serviceCtx.put("productId", productId);
+                serviceCtx.put("facilityId", facilityId);
+                serviceCtx.put("allocationPlanAndItemList", allocationPlanItems);
+                serviceCtx.put("userLogin", userLogin);
+                serviceResult = dispatcher.runSync("reassignInventoryReservationsByAllocationPlan", serviceCtx);
                 if (ServiceUtil.isError(serviceResult)) {
                     Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
@@ -7158,6 +7227,8 @@ public class OrderServices {
             }
         } catch (GenericServiceException gse) {
             return ServiceUtil.returnError(gse.getMessage());
+        } catch (GenericEntityException gee) {
+            return ServiceUtil.returnError(gee.getMessage());
         }
         return ServiceUtil.returnSuccess();
     }

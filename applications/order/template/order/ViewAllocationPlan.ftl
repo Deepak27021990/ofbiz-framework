@@ -221,13 +221,8 @@ under the License.
               <tr>
                 <input type="hidden" name="psim_${item.planItemSeqId}" value="${rowCount+1}" class="prioritySeqId"/>
                 <input type="hidden" name="pim_${item.planItemSeqId}" value="${item.productId}"/>
-                <#--
-                <input type="hidden" name="planId_o_${rowCount}" value="${item.planId}"/>
-                <input type="hidden" name="planItemSeqId_o_${rowCount}" value="${item.planItemSeqId}"/>
-                <input type="hidden" name="planMethodEnumId_o_${rowCount}" value="MANUAL"/>
-                <input type="hidden" name="lastModifiedByUser_o_${rowCount}" value="${userLogin.userLoginId}"/>
-                <input type="hidden" name="statusId_o_${rowCount}" value="ALLOC_PLAN_ITEM_CRTD"/>
-                -->
+                <input type="hidden" name="oim_${item.planItemSeqId}" value="${item.orderId}"/>
+                <input type="hidden" name="oisim_${item.planItemSeqId}" value="${item.orderItemSeqId}"/>
                 <#if editMode>
                   <td>
                     <input type="checkbox" name="rsm_${item.planItemSeqId}" value="Y" onchange="javascript:toggleItem();">
