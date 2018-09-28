@@ -6527,7 +6527,6 @@ public class OrderServices {
                     serviceCtx.put("userLogin", userLogin);
                     serviceResult = dispatcher.runSync("createAllocationPlanHeader", serviceCtx);
                     if (ServiceUtil.isError(serviceResult)) {
-                        Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                         return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                     }
                 } else {
@@ -6540,7 +6539,6 @@ public class OrderServices {
                     serviceCtx.put("userLogin", userLogin);
                     serviceResult = dispatcher.runSync("updateAllocationPlanHeader", serviceCtx);
                     if (ServiceUtil.isError(serviceResult)) {
-                        Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                         return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                     }
                 }
@@ -6569,7 +6567,6 @@ public class OrderServices {
                     serviceCtx.put("userLogin", userLogin);
                     serviceResult = dispatcher.runSync("createAllocationPlanItem", serviceCtx);
                     if (ServiceUtil.isError(serviceResult)) {
-                        Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                         return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                     }
                     planItemSeqId = (String) serviceResult.get("planItemSeqId");
@@ -6589,7 +6586,6 @@ public class OrderServices {
                     serviceCtx.put("userLogin", userLogin);
                     serviceResult = dispatcher.runSync("updateAllocationPlanItem", serviceCtx);
                     if (ServiceUtil.isError(serviceResult)) {
-                        Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                         return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                     }
                 }
@@ -6599,10 +6595,8 @@ public class OrderServices {
                 productPlanMap.put(productId, planId);
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         } catch (GenericServiceException e) {
-            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
         serviceResult.clear();
@@ -6640,7 +6634,6 @@ public class OrderServices {
                 serviceCtx.put("userLogin", userLogin);
                 serviceResult = dispatcher.runSync("updateAllocationPlanItem", serviceCtx);
                 if (ServiceUtil.isError(serviceResult)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                 }
                 serviceCtx.clear();
@@ -6665,16 +6658,13 @@ public class OrderServices {
                 serviceCtx.put("userLogin", userLogin);
                 serviceResult = dispatcher.runSync("reassignInventoryReservationsByAllocationPlan", serviceCtx);
                 if (ServiceUtil.isError(serviceResult)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                 }
             }
 
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         } catch (GenericServiceException e) {
-            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();
@@ -6707,16 +6697,13 @@ public class OrderServices {
                 serviceCtx.put("userLogin", userLogin);
                 serviceResult = dispatcher.runSync("updateAllocationPlanItem", serviceCtx);
                 if (ServiceUtil.isError(serviceResult)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                 }
                 serviceCtx.clear();
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         } catch (GenericServiceException e) {
-            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();
@@ -6761,15 +6748,12 @@ public class OrderServices {
                 serviceCtx.put("userLogin", userLogin);
                 serviceResult = dispatcher.runSync("updateAllocationPlanHeader", serviceCtx);
                 if (ServiceUtil.isError(serviceResult)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         } catch (GenericServiceException e) {
-            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
         serviceResult.clear();
@@ -6818,14 +6802,11 @@ public class OrderServices {
             serviceCtx.put("userLogin", userLogin);
             serviceResult = dispatcher.runSync("updateAllocationPlanItem", serviceCtx);
             if (ServiceUtil.isError(serviceResult)) {
-                Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         } catch (GenericServiceException e) {
-            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
         serviceResult.clear();
@@ -6865,7 +6846,6 @@ public class OrderServices {
                 serviceCtx.put("userLogin", userLogin);
                 serviceResult = dispatcher.runSync("changeAllocationPlanItemStatus", serviceCtx);
                 if (ServiceUtil.isError(serviceResult)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                 }
                 if (!planIds.contains(planId)) {
@@ -6890,7 +6870,6 @@ public class OrderServices {
                     serviceCtx.put("userLogin", userLogin);
                     serviceResult = dispatcher.runSync("changeAllocationPlanStatus", serviceCtx);
                     if (ServiceUtil.isError(serviceResult)) {
-                        Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                         return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                     }
                     serviceCtx.clear();
@@ -6898,10 +6877,8 @@ public class OrderServices {
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         } catch (GenericServiceException e) {
-            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();
@@ -6939,7 +6916,6 @@ public class OrderServices {
                 serviceCtx.put("userLogin", userLogin);
                 serviceResult = dispatcher.runSync("changeAllocationPlanItemStatus", serviceCtx);
                 if (ServiceUtil.isError(serviceResult)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                 }
                 if (!planIds.contains(planId)) {
@@ -6964,7 +6940,6 @@ public class OrderServices {
                     serviceCtx.put("userLogin", userLogin);
                     serviceResult = dispatcher.runSync("changeAllocationPlanStatus", serviceCtx);
                     if (ServiceUtil.isError(serviceResult)) {
-                        Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                         return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                     }
                     serviceCtx.clear();
@@ -6972,10 +6947,8 @@ public class OrderServices {
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         } catch (GenericServiceException e) {
-            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();
@@ -7016,7 +6989,6 @@ public class OrderServices {
                                 serviceCtx.put("userLogin", userLogin);
                                 Map<String, Object> serviceResult = dispatcher.runSync("updateAllocationPlanItem", serviceCtx);
                                 if (ServiceUtil.isError(serviceResult)) {
-                                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                                 }
                             }
@@ -7200,7 +7172,6 @@ public class OrderServices {
                 serviceCtx.put("userLogin", userLogin);
                 serviceResult = dispatcher.runSync("updateAllocationPlanHeader", serviceCtx);
                 if (ServiceUtil.isError(serviceResult)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                 }
                 serviceCtx.clear();
@@ -7221,7 +7192,6 @@ public class OrderServices {
                 serviceCtx.put("userLogin", userLogin);
                 serviceResult = dispatcher.runSync("reassignInventoryReservationsByAllocationPlan", serviceCtx);
                 if (ServiceUtil.isError(serviceResult)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                 }
             }
