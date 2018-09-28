@@ -7143,7 +7143,7 @@ public class OrderServices {
                 serviceCtx.clear();
             }
 
-            //If any item got updated, changed the header status to created
+            //If any item got updated, change the header status to created
             if (changeHeaderStatus) {
                 serviceCtx.put("planId", planId);
                 serviceCtx.put("productId", productId);
